@@ -9,7 +9,17 @@
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <atom:link href="https://xifanz42.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Project Case Studies</title>
+      <link>https://xifanz42.github.io/categories/project-case-studies/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>https://xifanz42.github.io/categories/project-case-studies/</guid>
+      <description></description>
+      
+    </item>
     
   </channel>
 </rss>

@@ -9,7 +9,17 @@
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <lastBuildDate>Wed, 02 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>LeadX: Building a Full-Stack Web3 Compliance Sales Intelligence SaaS from 0 to 1</title>
+      <link>https://xifanz42.github.io/portfolio/leadx-case-study/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>https://xifanz42.github.io/portfolio/leadx-case-study/</guid>
+      <description>As the sole technical lead, I built a Web3 compliance sales intelligence SaaS from 0 to 1—independently delivering the frontend, backend, database, and row-level security architecture, validating the product with real paying B2B customers, and developing practical lessons around technical decision-making and demand validation.</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://xifanz42.github.io/portfolio/leadx-case-study/featured.png" />
+    </item>
     
     <item>
       <title>Others</title>

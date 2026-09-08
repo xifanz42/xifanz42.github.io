@@ -1,7 +1,7 @@
 ---
 title: "LeadX: Building a Full-Stack Web3 Compliance Sales Intelligence SaaS from 0 to 1"
 date: 2026-09-03
-draft: true
+draft: false
 summary: "As the sole technical lead, I built a Web3 compliance sales intelligence SaaS from 0 to 1—independently delivering the frontend, backend, database, and row-level security architecture, validating the product with real paying B2B customers, and developing practical lessons around technical decision-making and demand validation."
 translationKey: "leadx-showcase"
 tags: ["project retrospective", "backend", "b2b-saas", "indie development"]

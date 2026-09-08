@@ -1,7 +1,7 @@
 ---
 title: "LeadX：从0到1的全栈Web3合规销售情报SaaS"
 date: 2026-09-03
-draft: true
+draft: false
 summary: "唯一技术负责人从0到1打造的Web3合规销售情报SaaS：独立交付前端、后端、数据库与行级权限全栈架构，跑通真实B端付费客户，并沉淀出一套关于技术决策与需求验证的实战方法论。"
 translationKey: "leadx-showcase"
 tags: ["项目复盘", "后端", "b2b-saas", "独立开发"]

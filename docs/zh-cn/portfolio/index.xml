@@ -9,7 +9,17 @@
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <atom:link href="https://xifanz42.github.io/zh-cn/portfolio/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/zh-cn/portfolio/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>LeadX：从0到1的全栈Web3合规销售情报SaaS</title>
+      <link>https://xifanz42.github.io/zh-cn/portfolio/leadx-case-study/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>https://xifanz42.github.io/zh-cn/portfolio/leadx-case-study/</guid>
+      <description>唯一技术负责人从0到1打造的Web3合规销售情报SaaS：独立交付前端、后端、数据库与行级权限全栈架构，跑通真实B端付费客户，并沉淀出一套关于技术决策与需求验证的实战方法论。</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://xifanz42.github.io/portfolio/leadx-case-study/featured.png" />
+    </item>
     
   </channel>
 </rss>

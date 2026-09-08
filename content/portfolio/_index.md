@@ -21,7 +21,8 @@ layoutBackgroundHeaderSpace: false
               Active
             {{< /badge >}}
             </td>
-            <td><a href="/portfolio/nl2sql-dify-case-study/">Read more →</a></td>
+            <!-- nl2sql case study is still a draft stub; link restored once written -->
+            <td>Coming soon</td>
             <td>Question classifier that routes queries into NL2SQL, RAG Q&amp;A, web-augmented generation, and document parsing pipelines.</td>
         </tr>
         <tr>
