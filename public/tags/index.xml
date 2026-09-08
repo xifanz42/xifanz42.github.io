@@ -2,14 +2,114 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on FAN</title>
-    <link>https://xifanz42.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on FAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <atom:link href="https://xifanz42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>B2b-Saas</title>
+      <link>http://localhost:1313/tags/b2b-saas/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/b2b-saas/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Backend</title>
+      <link>http://localhost:1313/tags/backend/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/backend/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Indie Development</title>
+      <link>http://localhost:1313/tags/indie-development/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/indie-development/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Project Retrospective</title>
+      <link>http://localhost:1313/tags/project-retrospective/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/project-retrospective/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>独立开发</title>
+      <link>http://localhost:1313/tags/%E7%8B%AC%E7%AB%8B%E5%BC%80%E5%8F%91/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/%E7%8B%AC%E7%AB%8B%E5%BC%80%E5%8F%91/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>项目复盘</title>
+      <link>http://localhost:1313/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Case Study</title>
+      <link>http://localhost:1313/tags/case-study/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/case-study/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Data Pipeline</title>
+      <link>http://localhost:1313/tags/data-pipeline/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/data-pipeline/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Next.js</title>
+      <link>http://localhost:1313/tags/next.js/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/next.js/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>PostgreSQL</title>
+      <link>http://localhost:1313/tags/postgresql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/tags/postgresql/</guid>
+      <description></description>
+      
+    </item>
     
   </channel>
 </rss>
