@@ -193,8 +193,10 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-# ---- Hugo (build caches only; public/ is committed since built locally) ----
+# ---- Hugo (build caches + local preview output; docs/ is the deployed artifact) ----
 /resources/_gen/
 /assets/_gen/
+/public/
 .hugo_build.lock
 .DS_Store
+.workbuddy/
