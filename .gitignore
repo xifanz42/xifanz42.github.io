@@ -192,3 +192,9 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# ---- Hugo (build caches only; public/ is committed since built locally) ----
+/resources/_gen/
+/assets/_gen/
+.hugo_build.lock
+.DS_Store

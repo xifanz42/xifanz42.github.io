@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>后端 on FAN</title>
+    <link>http://localhost:1313/tags/%E5%90%8E%E7%AB%AF/</link>
+    <description>Recent content in 后端 on FAN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
+    <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
+    <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/%E5%90%8E%E7%AB%AF/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>nl2sql agent</title>
+      <link>http://localhost:1313/portfolio/nl2sql-dify-case-study/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/portfolio/nl2sql-dify-case-study/</guid>
+      <description>作为唯一技术负责人，独立完成一个B2B销售情报SaaS的全栈开发：53个SQL migration、30张表、50+条 RLS 策略，撑起5,406家公司 / 12,388 张牌照的数据底座；732 条真实用户行为（含 35 次推荐评分）跑通了反馈链路。工程闭环跑通了，市场假设没有——项目已于2026年4月关停。</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/portfolio/leadx-case-study/featured.png" />
+    </item>
+    
+  </channel>
+</rss>

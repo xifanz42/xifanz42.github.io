@@ -1,0 +1,134 @@
+{{/*
+  Custom homepage layout (Blowfish: params.homepage.layout = "custom")
+
+  两种用法：
+  1) front matter 驱动 hero（英文页现状）：设 heroCaption / heroHeadline / heroTypeit /
+     heroLead / heroButtons / heroStatus，由本 partial 渲染 hero。
+  2) hero 写进正文 HTML（中文页）：front matter 只设 rawBody: true（打字机再加 useTypeit: true），
+     正文以 <section class="ap-hero"> 开头；本 partial 检测不到 hero 参数时自动跳过。
+  正文渲染：rawBody: true → .RawContent 直出（HTML 缩进不会被 markdown 当代码块）；
+  否则按普通 markdown + shortcode 渲染（英文首页走这条路）。
+*/}}
+<article class="relative isolate overflow-hidden" data-page-node-id="cGf0lICvMxx9Yd19I56JpQ">
+  {{ $typeitStrings := slice }}
+  {{ with .Params.heroTypeit }}
+    {{ with .strings }}{{ $typeitStrings = . }}{{ end }}
+  {{ end }}
+  {{/* useTypeit: 正文自带打字机（hero in body）时也要加载 TypeIt 库 */}}
+  {{ $useTypeit := or $typeitStrings (.Params.useTypeit | default false) }}
+
+  {{ if $useTypeit }}
+    {{ with resources.Get "lib/typeit/typeit.umd.js" }}
+      {{ $typeitLib := . | resources.Fingerprint ($.Site.Params.fingerprintAlgorithm | default "sha512") }}
+      <script defer src="{{ $typeitLib.RelPermalink }}" integrity="{{ $typeitLib.Data.Integrity }}"></script>
+    {{ end }}
+  {{ end }}
+  {{ with resources.Get "js/apple-reveal.js" }}
+    {{ $reveal := . | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+    <script defer src="{{ $reveal.RelPermalink }}" integrity="{{ $reveal.Data.Integrity }}"></script>
+  {{ end }}
+
+  {{/* front matter hero：仅当任一 hero 参数存在时渲染（中文页 hero 在正文里，自动跳过） */}}
+  {{ $hasHeroParams := or .Params.heroCaption .Params.heroHeadline .Params.heroTypeit .Params.heroLead .Params.heroButtons .Params.heroStatus }}
+  {{ if $hasHeroParams }}
+  <section class="px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 lg:px-8" data-page-node-id="Y6IZMPef75tdkf0E2szblE">
+    <div class="mx-auto max-w-5xl text-center" data-page-node-id="AYEVeau6yBI17yyK0BhgHs">
+      {{ with .Params.heroCaption | default .Site.Params.Author.name }}
+        <p class="landing-rise mx-auto mb-8 max-w-2xl text-balance text-base font-medium leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-lg" data-page-node-id="2EeQIh5s11dlJsBdRM3ZuB">
+          {{ . | markdownify }}
+        </p>
+      {{ end }}
+      {{ if .Params.heroHeadline }}
+        <h1 class="landing-rise landing-rise-1 text-balance text-3xl font-medium leading-[1.12] tracking-[-0.03em] text-neutral-900 dark:text-white sm:text-4xl lg:text-5xl" data-page-node-id="oyRKo1Rf3FzCAhDqqClPvE">
+          {{ .Params.heroHeadline | safeHTML }}
+        </h1>
+      {{ else }}
+        {{ with .Title }}
+          <h1 class="landing-rise landing-rise-1 text-balance text-4xl font-bold leading-[1.1] tracking-tight text-neutral-900 dark:text-white sm:text-6xl lg:text-7xl" data-page-node-id="erziTmgwfao70vqCm86znv">
+            {{ . | emojify }}
+          </h1>
+        {{ end }}
+      {{ end }}
+      {{ if $typeitStrings }}
+        {{ $ti := .Params.heroTypeit }}
+        <p class="landing-rise landing-rise-2 mt-6 text-balance text-xl font-medium leading-snug tracking-[-0.01em] text-neutral-700 dark:text-neutral-300 sm:text-2xl" data-page-node-id="UnXJjVMbAVwqrzNNPwsUbY">
+          <span id="hero-typeit" data-page-node-id="xNVBSHRky1ERUp8WmmGbRB">{{ index $typeitStrings 0 }}</span>
+        </p>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            new TypeIt("#hero-typeit", {
+              strings: {{ $typeitStrings | jsonify | safeJS }},
+              speed: {{ $ti.speed | default 65 }},
+              lifeLike: {{ $ti.lifeLike | default true }},
+              loop: {{ if isset $ti "loop" }}{{ $ti.loop }}{{ else }}true{{ end }},
+              breakLines: {{ $ti.breakLines | default false }},
+              startDelay: {{ $ti.startDelay | default 300 }},
+              waitUntilVisible: true,
+              afterComplete: function () {
+                var cursor = document.querySelector("#hero-typeit .ti-cursor");
+                if (cursor) {
+                  cursor.style.display = "none";
+                }
+              }
+            }).go();
+          });
+        </script>
+      {{ end }}
+      {{ with .Params.heroLead }}
+        <p class="landing-rise landing-rise-3 mx-auto mt-9 max-w-2xl text-balance text-lg leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-xl" data-page-node-id="Rnt3oqulxGWYRn9sTJksfD">
+          {{ . | markdownify }}
+        </p>
+      {{ end }}
+      {{ with .Params.heroButtons }}
+        <div class="landing-rise landing-rise-4 mt-10 flex flex-wrap items-center justify-center gap-3" data-page-node-id="fUCN6pMO3k77QqyEidzswQ">
+          {{ range . }}
+            {{ $isOutline := eq (.style | default "primary") "outline" }}
+            <a
+              class="inline-flex h-[50px] items-center justify-center rounded-full px-7 text-[17px] font-normal transition-colors {{ if $isOutline }}border border-primary-600/50 text-primary-600 hover:bg-primary-600/5 dark:border-primary-400/50 dark:text-primary-400 dark:hover:bg-primary-400/5{{ else }}bg-primary-600 text-white hover:bg-primary-500 dark:bg-primary-500 dark:hover:bg-primary-400{{ end }}"
+              href="{{ .url | safeURL }}" data-page-node-id="z92WLZdzt8e1LxmUmYUuph">
+              {{ .label | markdownify }}
+            </a>
+          {{ end }}
+        </div>
+      {{ end }}
+      {{ $statusStrings := slice }}
+      {{ with .Params.heroStatus }}
+        {{ with .strings }}{{ $statusStrings = . }}{{ end }}
+      {{ end }}
+      {{ if $statusStrings }}
+        {{ $st := .Params.heroStatus }}
+        <p class="landing-rise landing-rise-4 mt-16 font-mono text-sm text-neutral-400 dark:text-neutral-500" data-page-node-id="2yhxDRhnCJdPdauhMB7xZY">
+          <span id="hero-status" data-page-node-id="anuHGtlMoCSWtldj4hng9B">{{ .Params.heroStatus.prefix | default "" }}{{ index $statusStrings 0 }}</span>
+        </p>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            new TypeIt("#hero-status", {
+              strings: {{ $statusStrings | jsonify | safeJS }},
+              speed: {{ $st.speed | default 50 }},
+              lifeLike: {{ $st.lifeLike | default true }},
+              loop: {{ $st.loop | default true }},
+              breakLines: false,
+              startDelay: {{ $st.startDelay | default 1600 }},
+              waitUntilVisible: true
+            }).go();
+          });
+        </script>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ if .Params.rawBody }}
+  <section class="landing-body mx-auto px-4 pt-4 sm:px-6 lg:px-8" data-page-node-id="hagrDGJxToFjlJyiI6pwok">
+    {{/* rawBody: true → 正文是手写 HTML，绕过 markdown（缩进不会被当代码块）
+         不要在这里新写 tailwind 类（如 max-w-5xl / pb-*）——主题 CSS 预编译，
+         新类名不会生成规则。宽度由 baseof.html 的 body max-w-7xl 约束，
+         底部留白在 custom.css 的 .apple-page padding-bottom */}}
+    {{ .RawContent | safeHTML }}
+  </section>
+  {{ else }}
+  <section class="landing-body mx-auto px-4 pt-4 sm:px-6 lg:px-8" data-page-node-id="hagrDGJxToFjlJyiI6pwok">
+    {{ .Content }}
+  </section>
+  {{ end }}
+</article>

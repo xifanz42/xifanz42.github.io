@@ -1,0 +1,146 @@
+<article class="relative isolate overflow-hidden">
+  {{ $heroImage := .Params.heroImage | default site.Params.homepage.homepageImage }}
+  {{ $heroImg := "" }}
+  {{ with $heroImage }}
+    {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+      {{ $heroImg = resources.GetRemote . }}
+    {{ else }}
+      {{ $heroImg = resources.Get . }}
+    {{ end }}
+  {{ end }}
+  {{ with $heroImg }}
+    <div
+      id="landing-hero-background"
+      class="hero-canvas-fade nozoom fixed inset-x-0 top-0 -z-10 h-[640px]">
+      <img
+        class="absolute inset-0 h-full w-full object-cover"
+        src="{{ .RelPermalink }}"
+        role="presentation"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high" />
+      <div class="absolute inset-0 bg-neutral/60 dark:bg-neutral-800/50"></div>
+    </div>
+    {{ with resources.Get "js/hero-scroll-fade.js" }}
+      {{ $heroFade := . | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+      <script
+        type="text/javascript"
+        src="{{ $heroFade.RelPermalink }}"
+        integrity="{{ $heroFade.Data.Integrity }}"
+        data-hero-id="landing-hero-background"
+        data-fade-distance="500"></script>
+    {{ end }}
+  {{ end }}
+
+  {{ $typeitStrings := slice }}
+  {{ with .Params.heroTypeit }}
+    {{ with .strings }}{{ $typeitStrings = . }}{{ end }}
+  {{ end }}
+  {{ $statusStrings := slice }}
+  {{ with .Params.heroStatus }}
+    {{ with .strings }}{{ $statusStrings = . }}{{ end }}
+  {{ end }}
+  {{ if or $typeitStrings $statusStrings .Params.useTypeit }}
+    {{ with resources.Get "lib/typeit/typeit.umd.js" }}
+      {{ $typeitLib := . | resources.Fingerprint ($.Site.Params.fingerprintAlgorithm | default "sha512") }}
+      <script defer src="{{ $typeitLib.RelPermalink }}" integrity="{{ $typeitLib.Data.Integrity }}"></script>
+    {{ end }}
+  {{ end }}
+  {{ with resources.Get "js/apple-reveal.js" }}
+    {{ $reveal := . | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+    <script defer src="{{ $reveal.RelPermalink }}" integrity="{{ $reveal.Data.Integrity }}"></script>
+  {{ end }}
+
+  {{ if not .Params.rawBody }}
+  <section class="flex min-h-[88vh] items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl py-24 text-center">
+      {{ with .Params.heroCaption | default .Site.Params.Author.name }}
+        <p class="landing-rise mx-auto mb-8 max-w-2xl text-balance text-base font-medium leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-lg">
+          {{ . | markdownify }}
+        </p>
+      {{ end }}
+      {{ if .Params.heroHeadline }}
+        <h1 class="landing-rise landing-rise-1 text-balance text-4xl font-semibold leading-[1.07] tracking-[-0.035em] text-neutral-900 dark:text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+          {{ .Params.heroHeadline | safeHTML }}
+        </h1>
+      {{ else if and (not $typeitStrings) .Title }}
+        <h1 class="landing-rise landing-rise-1 text-balance text-4xl font-bold leading-[1.1] tracking-tight text-neutral-900 dark:text-white sm:text-6xl lg:text-7xl">
+          {{ .Title | emojify }}
+        </h1>
+      {{ end }}
+      {{ if $typeitStrings }}
+        {{ $ti := .Params.heroTypeit }}
+        <p class="landing-rise landing-rise-2 mt-7 text-balance text-2xl font-semibold leading-tight tracking-[-0.03em] text-neutral-900 dark:text-white sm:text-3xl lg:text-4xl">
+          <span id="hero-typeit">{{ index $typeitStrings 0 }}</span>
+        </p>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            new TypeIt("#hero-typeit", {
+              strings: {{ $typeitStrings | jsonify | safeJS }},
+              speed: {{ $ti.speed | default 65 }},
+              lifeLike: {{ $ti.lifeLike | default true }},
+              loop: {{ if isset $ti "loop" }}{{ $ti.loop }}{{ else }}true{{ end }},
+              breakLines: {{ $ti.breakLines | default false }},
+              startDelay: {{ $ti.startDelay | default 300 }},
+              waitUntilVisible: true,
+              afterComplete: function () {
+                var cursor = document.querySelector("#hero-typeit .ti-cursor");
+                if (cursor) {
+                  cursor.style.display = "none";
+                }
+              }
+            }).go();
+          });
+        </script>
+      {{ end }}
+      {{ with .Params.heroLead }}
+        <p class="landing-rise landing-rise-3 mx-auto mt-9 max-w-2xl text-balance text-lg leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-xl">
+          {{ . | markdownify }}
+        </p>
+      {{ end }}
+      {{ with .Params.heroButtons }}
+        <div class="landing-rise landing-rise-4 mt-12 flex flex-wrap items-center justify-center gap-4">
+          {{ range . }}
+            {{ if eq (.style | default "primary") "outline" }}
+              <a
+                class="inline-flex h-[50px] items-center justify-center rounded-full px-4 text-lg font-normal text-primary-600 transition-opacity hover:opacity-70 dark:text-primary-400"
+                href="{{ .url | safeURL }}">
+                {{ .label | markdownify }}
+              </a>
+            {{ else }}
+              <a
+                class="inline-flex h-[50px] items-center justify-center rounded-full bg-primary-600 px-7 text-lg font-normal text-white transition-colors hover:bg-primary-500 dark:bg-primary-500 dark:hover:bg-primary-400"
+                href="{{ .url | safeURL }}">
+                {{ .label | markdownify }}
+              </a>
+            {{ end }}
+          {{ end }}
+        </div>
+      {{ end }}
+      {{ if $statusStrings }}
+        {{ $st := .Params.heroStatus }}
+        <p class="landing-rise landing-rise-4 mt-16 font-mono text-sm text-neutral-400 dark:text-neutral-500">
+          <span id="hero-status">{{ .Params.heroStatus.prefix | default "" }}{{ index $statusStrings 0 }}</span>
+        </p>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            new TypeIt("#hero-status", {
+              strings: {{ $statusStrings | jsonify | safeJS }},
+              speed: {{ $st.speed | default 50 }},
+              lifeLike: {{ $st.lifeLike | default true }},
+              loop: {{ $st.loop | default true }},
+              breakLines: false,
+              startDelay: {{ $st.startDelay | default 1600 }},
+              waitUntilVisible: true
+            }).go();
+          });
+        </script>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <section class="landing-body mx-auto max-w-5xl px-4 pb-28 pt-4 sm:px-6 sm:pb-36 lg:px-8 {{ if .Params.rawBody }}pt-16 sm:pt-24{{ end }}">
+    {{ .Content }}
+  </section>
+</article>

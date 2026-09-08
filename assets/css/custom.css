@@ -1,0 +1,833 @@
+/* Apple-style landing page refinements */
+
+/* Body: one idea per screen, generous whitespace between blocks */
+.landing-body > * + * {
+  margin-top: 7rem;
+}
+@media (min-width: 640px) {
+  .landing-body > * + * {
+    margin-top: 9rem;
+  }
+}
+
+/* Lead paragraph: centered manifesto */
+.landing-body .lead {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 44rem;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  font-weight: 500;
+  color: #525252;
+}
+.dark .landing-body .lead {
+  color: #a3a3a3;
+}
+
+/* Section titles: centered, no anchor links */
+.landing-body > h2 {
+  text-align: center;
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #171717;
+}
+.dark .landing-body > h2 {
+  color: #fafafa;
+}
+.landing-body > h2 + * {
+  margin-top: 2.5rem;
+}
+.landing-body > h2 .anchor,
+.landing-body > h2 > span {
+  display: none;
+}
+
+/* Principle cards (how I work) */
+.principle-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 640px) {
+  .principle-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.principle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 2rem 1rem;
+  border-radius: 1.25rem;
+  background: rgb(var(--color-primary-50));
+  text-align: center;
+}
+.principle-card strong {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgb(var(--color-primary-900));
+}
+.principle-card span {
+  font-size: 0.9375rem;
+  color: rgb(var(--color-primary-700));
+}
+.dark .principle-card {
+  background: rgba(var(--color-primary-500), 0.12);
+}
+.dark .principle-card strong {
+  color: rgb(var(--color-primary-100));
+}
+.dark .principle-card span {
+  color: rgb(var(--color-primary-300));
+}
+
+/* Work cards (featured works) */
+.landing-body > .work-card + .work-card {
+  margin-top: 1.25rem;
+}
+.work-card {
+  padding: 1.75rem 2rem;
+  border-radius: 1.25rem;
+  background: #fafaf9;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.dark .work-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.work-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #171717;
+}
+.dark .work-card h3 {
+  color: #fafafa;
+}
+.work-card h3 .anchor,
+.work-card h3 > span {
+  display: none;
+}
+.work-card p {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #525252;
+}
+.dark .work-card p {
+  color: #a3a3a3;
+}
+.work-card .evidence {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #737373;
+}
+.dark .work-card .evidence {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  color: #8b8b8b;
+}
+
+/* Feature grid: 2x2 at desktop, cards breathe */
+.landing-body .not-prose.grid {
+  gap: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .landing-body .not-prose.grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Cards: quiet on hover — no lift, no glow, just a border */
+.landing-body article {
+  transition: border-color 0.4s ease, background-color 0.4s ease;
+}
+.landing-body article:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.25);
+}
+.dark .landing-body article:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Apple-style landing page (reference redesign) */
+.landing-body .apple-page {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  letter-spacing: -0.01em;
+  color: #1d1d1f;
+}
+.dark .landing-body .apple-page {
+  color: #f5f5f7;
+}
+.landing-body .apple-page > * + * {
+  margin-top: 150px;
+}
+@media (max-width: 768px) {
+  .landing-body .apple-page > * + * {
+    margin-top: 96px;
+  }
+}
+/* 收尾 CTA：上方贴近内容（64px），底部留白与区块节奏一致（150px），
+   值写在这里而不是模板的 tailwind 类 —— 主题 CSS 预编译，新类名不会生效 */
+.landing-body .apple-page > .ap-btns:last-child {
+  margin-top: 64px;
+}
+.landing-body .apple-page {
+  padding-bottom: 150px;
+}
+@media (max-width: 768px) {
+  .landing-body .apple-page > .ap-btns:last-child {
+    margin-top: 48px;
+  }
+  .landing-body .apple-page {
+    padding-bottom: 96px;
+  }
+}
+
+/* Quote band */
+.landing-body .ap-quote {
+  background: #f5f5f7;
+  border-radius: 28px;
+  padding: 110px 24px;
+  text-align: center;
+}
+.dark .landing-body .ap-quote {
+  background: rgba(255, 255, 255, 0.05);
+}
+.landing-body .ap-quote > p:first-child {
+  font-size: clamp(28px, 3.6vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  max-width: 840px;
+  margin: 0 auto;
+}
+.landing-body .ap-quote-src {
+  margin-top: 32px;
+  font-size: 17px;
+  color: #86868b;
+}
+
+/* Works */
+.landing-body .ap-works h2,
+.landing-body .ap-connector h2,
+.landing-body .ap-how h2,
+.landing-body .ap-pattern h2,
+.landing-body .ap-now h2,
+.landing-body .ap-contact h2 {
+  font-size: clamp(32px, 4.4vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.09;
+}
+.landing-body .ap-works-lead {
+  margin-top: 20px;
+  max-width: 600px;
+  font-size: clamp(19px, 2.1vw, 24px);
+  line-height: 1.45;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-works-lead {
+  color: #a1a1a6;
+}
+.landing-body .ap-work {
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: 88px;
+  align-items: center;
+  margin-top: 110px;
+}
+.landing-body .ap-work:nth-of-type(even) .ap-visual {
+  order: 2;
+}
+.landing-body .ap-visual {
+  aspect-ratio: 4 / 3;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px;
+  gap: 12px;
+}
+.landing-body .ap-visual b {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.landing-body .t-a { background: #f5f5f7; }
+.landing-body .t-b { background: #eef1f4; }
+.landing-body .t-c { background: #f2f0ec; }
+.dark .landing-body .t-a { background: #1d1d20; }
+.dark .landing-body .t-b { background: #191d22; }
+.dark .landing-body .t-c { background: #221f1a; }
+.landing-body .ap-work h3 {
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.landing-body .ap-work-body {
+  margin-top: 18px;
+  font-size: 21px;
+  line-height: 1.55;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-work-body {
+  color: #a1a1a6;
+}
+.landing-body .ap-meta {
+  margin-top: 38px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-meta {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-meta > div {
+  display: flex;
+  gap: 24px;
+  padding: 17px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-meta > div {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-meta dt {
+  width: 76px;
+  flex: none;
+  color: #86868b;
+  font-size: 15px;
+}
+.dark .landing-body .ap-meta dt {
+  color: #8e8e93;
+}
+.landing-body .ap-meta dd {
+  font-size: 17px;
+}
+
+/* Connector rows */
+.landing-body .ap-connector h2 {
+  margin-bottom: 70px;
+}
+.landing-body .ap-xrow {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 30px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-xrow {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-xrow:first-of-type {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-xrow:first-of-type {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-xrow .t {
+  font-size: clamp(22px, 2.8vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.landing-body .ap-xrow .op {
+  font-size: clamp(20px, 2.4vw, 30px);
+  color: #c7c7cc;
+  font-weight: 400;
+}
+.dark .landing-body .ap-xrow .op {
+  color: #48484a;
+}
+.landing-body .ap-xrow .out {
+  margin-left: auto;
+  font-size: clamp(17px, 1.9vw, 21px);
+  color: #6e6e73;
+}
+.dark .landing-body .ap-xrow .out {
+  color: #a1a1a6;
+}
+
+/* Principles 2x2 */
+.landing-body .ap-principles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 76px 88px;
+  margin-top: 70px;
+}
+.landing-body .ap-principles h4 {
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.landing-body .ap-principles p {
+  font-size: 19px;
+  color: #6e6e73;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.dark .landing-body .ap-principles p {
+  color: #a1a1a6;
+}
+
+/* Now band */
+.landing-body .ap-now {
+  background: #f5f5f7;
+  border-radius: 28px;
+  padding: 110px 24px;
+  text-align: center;
+}
+.dark .landing-body .ap-now {
+  background: rgba(255, 255, 255, 0.05);
+}
+.landing-body .ap-now > p:nth-of-type(1) {
+  margin-top: 26px;
+  font-size: 21px;
+  line-height: 1.55;
+}
+.landing-body .ap-now-sub {
+  margin-top: 22px;
+  font-size: 17px;
+  color: #86868b;
+}
+
+/* Contact */
+.landing-body .ap-contact {
+  text-align: center;
+}
+.landing-body .ap-mail {
+  display: inline-block;
+  margin-top: 30px;
+  font-size: clamp(26px, 3.8vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: rgb(var(--color-primary-600));
+  text-decoration: none;
+}
+.dark .landing-body .ap-mail {
+  color: rgb(var(--color-primary-400));
+}
+.landing-body .ap-mail:hover {
+  text-decoration: underline;
+}
+.landing-body .ap-chips {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 56px;
+}
+.landing-body .ap-chip {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 980px;
+  padding: 11px 22px;
+  font-size: 17px;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-chip {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #a1a1a6;
+}
+.landing-body .ap-contact-note {
+  margin-top: 34px;
+  font-size: 17px;
+  color: #86868b;
+}
+
+/* Reveal (reference style) */
+.landing-body .r {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.28, 0.11, 0.32, 1),
+    transform 0.9s cubic-bezier(0.28, 0.11, 0.32, 1);
+}
+.landing-body .r.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-body .r {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-body .ap-work {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-top: 96px;
+  }
+  .landing-body .ap-work:nth-of-type(even) .ap-visual {
+    order: 0;
+  }
+  .landing-body .ap-principles {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    margin-top: 48px;
+  }
+  .landing-body .ap-xrow .out {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}
+
+/* Scroll-triggered reveal */
+.apple-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.apple-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .apple-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- v5: steps / causal chain / pattern table / buttons ---------- */
+
+/* Status dot in hero caption */
+.ap-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34c759;
+  margin-right: 9px;
+  vertical-align: middle;
+}
+
+/* Steps: 拆解 → 学习 → 设计 → 构建 */
+.landing-body .ap-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 36px;
+  margin-top: 74px;
+}
+.landing-body .ap-step {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 24px;
+}
+.dark .landing-body .ap-step {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-step .n {
+  font-size: 15px;
+  color: #86868b;
+}
+.landing-body .ap-step h4 {
+  margin-top: 8px;
+  font-size: clamp(22px, 2.4vw, 29px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+}
+.dark .landing-body .ap-step h4 {
+  color: #f5f5f7;
+}
+.landing-body .ap-step p {
+  margin-top: 10px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-step p {
+  color: #a1a1a6;
+}
+
+/* Causal chain */
+.landing-body .ap-chain {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 70px;
+}
+.landing-body .ap-cnode {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 20px;
+  position: relative;
+}
+.dark .landing-body .ap-cnode {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-cnode + .ap-cnode::before {
+  content: "\2192";
+  position: absolute;
+  left: -22px;
+  top: 20px;
+  color: #c7c7cc;
+  font-size: 18px;
+}
+.dark .landing-body .ap-cnode + .ap-cnode::before {
+  color: #48484a;
+}
+.landing-body .ap-cnode .cy {
+  font-size: 14px;
+  color: #86868b;
+}
+.landing-body .ap-cnode b {
+  display: block;
+  margin-top: 8px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.landing-body .ap-cnode.hi b {
+  color: rgb(var(--color-primary-600));
+}
+.dark .landing-body .ap-cnode.hi b {
+  color: rgb(var(--color-primary-400));
+}
+.landing-body .ap-cnode p {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #86868b;
+}
+.dark .landing-body .ap-cnode p {
+  color: #8e8e93;
+}
+
+/* Pattern table */
+.landing-body .ap-pat {
+  margin-top: 44px;
+}
+.landing-body .ap-patrow {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) minmax(0, 1.15fr);
+  gap: 28px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-patrow {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-patrow:last-of-type {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.dark .landing-body .ap-patrow:last-of-type {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.landing-body .ap-patrow.head {
+  padding: 0 0 14px;
+  border-top: 0;
+  font-size: 14px;
+  color: #86868b;
+}
+.landing-body .ap-patrow .s {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.landing-body .ap-patrow .w {
+  font-size: 17px;
+  line-height: 1.5;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-patrow .w {
+  color: #a1a1a6;
+}
+.landing-body .ap-patrow .b {
+  font-size: 17px;
+  line-height: 1.5;
+}
+.landing-body .ap-pat-esc {
+  margin-top: 28px;
+  font-size: 17px;
+  color: #86868b;
+}
+.landing-body .ap-pat-note {
+  margin-top: 16px;
+  max-width: 640px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: #1d1d1f;
+}
+.dark .landing-body .ap-pat-note {
+  color: #f5f5f7;
+}
+
+/* Two-button CTA */
+.landing-body .ap-btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.landing-body .ap-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 28px;
+  border-radius: 980px;
+  background: rgb(var(--color-primary-600));
+  color: #fff;
+  font-size: 17px;
+  text-decoration: none;
+  transition: background-color 0.3s cubic-bezier(0.28, 0.11, 0.32, 1);
+}
+.landing-body .ap-btn:hover {
+  background: rgb(var(--color-primary-500));
+}
+.dark .landing-body .ap-btn {
+  background: rgb(var(--color-primary-500));
+}
+.landing-body .ap-btn.outline {
+  background: transparent;
+  padding: 0 28px;
+  border: 1px solid rgb(var(--color-primary-600) / 0.5);
+  color: rgb(var(--color-primary-600));
+}
+.landing-body .ap-btn.outline:hover {
+  background: rgb(var(--color-primary-600) / 0.06);
+  text-decoration: none;
+}
+.dark .landing-body .ap-btn.outline {
+  background: transparent;
+  border-color: rgb(var(--color-primary-400) / 0.5);
+  color: rgb(var(--color-primary-400));
+}
+
+/* Contact lead */
+.landing-body .ap-contact-lead {
+  margin-top: 20px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-contact-lead {
+  color: #a1a1a6;
+}
+
+/* Works tagline (下挂于因果链) */
+.landing-body .ap-works-tag {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: #86868b;
+}
+.dark .landing-body .ap-works-tag {
+  color: #8e8e93;
+}
+
+/* Hero (v5.4: 卡片模式，同 ap-now 风格) */
+.landing-body .ap-hero {
+  background: #f5f5f7;
+  border-radius: 28px;
+  padding: 96px 24px 90px;
+  text-align: center;
+}
+.dark .landing-body .ap-hero {
+  background: rgba(255, 255, 255, 0.05);
+}
+.landing-body .ap-hero-eyebrow {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgb(var(--color-primary-600));
+}
+.dark .landing-body .ap-hero-eyebrow {
+  color: rgb(var(--color-primary-400));
+}
+.landing-body .ap-hero h1 {
+  margin: 22px auto 0;
+  max-width: 18em;
+  font-size: clamp(32px, 4.4vw, 52px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: #1d1d1f;
+}
+.dark .landing-body .ap-hero h1 {
+  color: #f5f5f7;
+}
+.landing-body .ap-hero-sub {
+  margin-top: 22px;
+  min-height: 1.6em;
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #6e6e73;
+}
+.dark .landing-body .ap-hero-sub {
+  color: #a1a1a6;
+}
+.landing-body .ap-hero-tech {
+  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.landing-body .ap-hero-tech span {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 980px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  color: #1d1d1f;
+  line-height: 1.3;
+}
+.dark .landing-body .ap-hero-tech span {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f5f5f7;
+}
+.landing-body .ap-hero-btns {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .landing-body .ap-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 44px 32px;
+  }
+}
+@media (max-width: 768px) {
+  .landing-body .ap-steps,
+  .landing-body .ap-chain {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin-top: 48px;
+  }
+  .landing-body .ap-cnode + .ap-cnode::before {
+    display: none;
+  }
+  .landing-body .ap-patrow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 20px 0;
+  }
+  .landing-body .ap-patrow.head {
+    display: none;
+  }
+  .landing-body .ap-hero {
+    padding: 64px 20px 60px;
+  }
+}

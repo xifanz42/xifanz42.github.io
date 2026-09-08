@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Project Case Studies on FAN</title>
+    <link>http://localhost:1313/categories/project-case-studies/</link>
+    <description>Recent content in Project Case Studies on FAN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
+    <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
+    <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/project-case-studies/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>LeadX: Building a Full-Stack Web3 Compliance Sales Intelligence SaaS from 0 to 1</title>
+      <link>http://localhost:1313/portfolio/leadx-case-study/</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:1313/portfolio/leadx-case-study/</guid>
+      <description>As the sole technical lead, I built a Web3 compliance sales intelligence SaaS from 0 to 1—independently delivering the frontend, backend, database, and row-level security architecture, validating the product with real paying B2B customers, and developing practical lessons around technical decision-making and demand validation.</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/portfolio/leadx-case-study/featured.png" />
+    </item>
+    
+  </channel>
+</rss>
