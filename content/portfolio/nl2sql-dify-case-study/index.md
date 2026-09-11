@@ -5,17 +5,18 @@ draft: false
 summary: "A self-built agent that pauses to ask clarifying questions before generating SQL — instead of guessing at ambiguous requests like most NL2SQL chatbots do. Built on a small classifier, a dedicated SQL coder, and a business-context database dictionary to handle real-world schema ambiguity."
 tags: ["Indie Dev", "showcase"]
 categories: ["Project"]
+showWordCount : true
+showReadingTime : true
+showSummary : true
+showAuthor: true
+
 showDate : false
 showDateOnlyInArticle : false
 showDateUpdated : false
 showHeadingAnchors : false
 showPagination : false
-showReadingTime : true
 showTableOfContents : true
 showTaxonomies : false 
-showWordCount : true
-showSummary : true
-showAuthor: false
 showEdit: false
 showViews: false
 showLikes: false

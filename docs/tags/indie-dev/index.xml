@@ -2,23 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Indie Dev on FAN</title>
-    <link>http://localhost:61688/tags/indie-dev/</link>
+    <link>https://xifanz42.github.io/tags/indie-dev/</link>
     <description>Recent content in Indie Dev on FAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:61688/tags/indie-dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/tags/indie-dev/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>NL2SQL Agent: Ask Before You Query</title>
-      <link>http://localhost:61688/portfolio/nl2sql-dify-case-study/</link>
+      <link>https://xifanz42.github.io/portfolio/nl2sql-dify-case-study/</link>
       <pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>http://localhost:61688/portfolio/nl2sql-dify-case-study/</guid>
+      <guid>https://xifanz42.github.io/portfolio/nl2sql-dify-case-study/</guid>
       <description>A self-built agent that pauses to ask clarifying questions before generating SQL — instead of guessing at ambiguous requests like most NL2SQL chatbots do. Built on a small classifier, a dedicated SQL coder, and a business-context database dictionary to handle real-world schema ambiguity.</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:61688/portfolio/nl2sql-dify-case-study/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://xifanz42.github.io/portfolio/nl2sql-dify-case-study/featured.png" />
     </item>
     
   </channel>

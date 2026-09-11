@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Authors on FAN</title>
-    <link>http://localhost:61688/zh-cn/authors/</link>
+    <link>https://xifanz42.github.io/zh-cn/authors/</link>
     <description>Recent content in Authors on FAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <atom:link href="http://localhost:61688/zh-cn/authors/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://xifanz42.github.io/zh-cn/authors/index.xml" rel="self" type="application/rss+xml" />
     
   </channel>
 </rss>
