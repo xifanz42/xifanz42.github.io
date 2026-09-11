@@ -26,7 +26,7 @@ useTypeit: true
     document.addEventListener("DOMContentLoaded", function () {
       new TypeIt("#hero-typeit", {
         strings: ["Decompose → Learn → Design → Build"],
-        speed: 110,
+        speed: 150,
         lifeLike: true,
         loop: false,
         startDelay: 400,

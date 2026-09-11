@@ -25,9 +25,10 @@ showLikes: false
 layoutBackgroundHeaderSpace: false
 ---
 
-{{< badge >}}
-start-up project
-{{< /badge >}}
+{{< keywordList >}}
+{{< keyword icon="check" >}} Translated by **AI** {{< /keyword >}}
+{{< keyword icon="edit" >}} Reviewed by **Human** {{< /keyword >}}
+{{< /keywordList >}}
 
 
 ## In One Sentence

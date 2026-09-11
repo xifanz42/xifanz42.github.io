@@ -25,10 +25,9 @@ showLikes: false
 layoutBackgroundHeaderSpace: false
 ---
 
-{{< badge >}}
-start-up project
-{{< /badge >}}
-
+{{< keywordList >}}
+{{< keyword icon="edit" >}} Written by **Human** {{< /keyword >}}
+{{< /keywordList >}}
 
 ## 一句话总结
 

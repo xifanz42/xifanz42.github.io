@@ -3,98 +3,114 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://xifanz42.github.io/portfolio/leadx-case-study/</loc>
+    <loc>http://localhost:61688/portfolio/nl2sql-dify-case-study/</loc>
+    <lastmod>2026-09-11T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="http://localhost:61688/zh-cn/portfolio/nl2sql-dify-case-study/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="http://localhost:61688/portfolio/nl2sql-dify-case-study/"
+    />
+  </url>
+  <url>
+    <loc>http://localhost:61688/</loc>
+    <lastmod>2026-09-11T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="http://localhost:61688/zh-cn/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="http://localhost:61688/"
+    />
+  </url>
+  <url>
+    <loc>http://localhost:61688/portfolio/leadx-case-study/</loc>
     <lastmod>2026-09-03T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/portfolio/leadx-case-study/"
+      href="http://localhost:61688/zh-cn/portfolio/leadx-case-study/"
     />
     <xhtml:link
       rel="alternate"
       hreflang="en"
-      href="https://xifanz42.github.io/portfolio/leadx-case-study/"
+      href="http://localhost:61688/portfolio/leadx-case-study/"
     />
   </url>
   <url>
-    <loc>https://xifanz42.github.io/</loc>
-    <lastmod>2026-09-03T00:00:00+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-      rel="alternate"
-      hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/"
-    />
-    <xhtml:link
-      rel="alternate"
-      hreflang="en"
-      href="https://xifanz42.github.io/"
-    />
-  </url>
-  <url>
-    <loc>https://xifanz42.github.io/others/</loc>
+    <loc>http://localhost:61688/others/</loc>
     <lastmod>2026-09-02T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/others/"
+      href="http://localhost:61688/zh-cn/others/"
     />
     <xhtml:link
       rel="alternate"
       hreflang="en"
-      href="https://xifanz42.github.io/others/"
+      href="http://localhost:61688/others/"
     />
   </url>
   <url>
-    <loc>https://xifanz42.github.io/about/</loc>
+    <loc>http://localhost:61688/about/</loc>
     <lastmod>2026-08-26T10:00:00+08:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/about/"
+      href="http://localhost:61688/zh-cn/about/"
     />
     <xhtml:link
       rel="alternate"
       hreflang="en"
-      href="https://xifanz42.github.io/about/"
+      href="http://localhost:61688/about/"
     />
   </url>
   <url>
-    <loc>https://xifanz42.github.io/portfolio/</loc>
+    <loc>http://localhost:61688/portfolio/</loc>
     <lastmod>2022-06-13T21:28:51+01:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/portfolio/"
+      href="http://localhost:61688/zh-cn/portfolio/"
     />
     <xhtml:link
       rel="alternate"
       hreflang="en"
-      href="https://xifanz42.github.io/portfolio/"
+      href="http://localhost:61688/portfolio/"
     />
   </url>
   <url>
-    <loc>https://xifanz42.github.io/articles/</loc>
+    <loc>http://localhost:61688/articles/</loc>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/articles/"
+      href="http://localhost:61688/zh-cn/articles/"
     />
     <xhtml:link
       rel="alternate"
       hreflang="en"
-      href="https://xifanz42.github.io/articles/"
+      href="http://localhost:61688/articles/"
     />
   </url>
 </urlset>

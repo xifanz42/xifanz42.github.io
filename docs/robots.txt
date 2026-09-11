@@ -1,3 +1,3 @@
 User-agent: *
-Allow: /
-Sitemap: https://xifanz42.github.io/sitemap.xml
+Disallow: /
+Sitemap: http://localhost:61688/sitemap.xml

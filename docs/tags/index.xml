@@ -2,51 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on FAN</title>
-    <link>https://xifanz42.github.io/tags/</link>
+    <link>http://localhost:61688/tags/</link>
     <description>Recent content in Tags on FAN</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <lastBuildDate>Thu, 03 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:61688/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Indie Dev</title>
+      <link>http://localhost:61688/tags/indie-dev/</link>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:61688/tags/indie-dev/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Showcase</title>
+      <link>http://localhost:61688/tags/showcase/</link>
+      <pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>http://localhost:61688/tags/showcase/</guid>
+      <description></description>
+      
+    </item>
     
     <item>
       <title>B2b-Saas</title>
-      <link>https://xifanz42.github.io/tags/b2b-saas/</link>
+      <link>http://localhost:61688/tags/b2b-saas/</link>
       <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>https://xifanz42.github.io/tags/b2b-saas/</guid>
+      <guid>http://localhost:61688/tags/b2b-saas/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Backend</title>
-      <link>https://xifanz42.github.io/tags/backend/</link>
+      <link>http://localhost:61688/tags/backend/</link>
       <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>https://xifanz42.github.io/tags/backend/</guid>
+      <guid>http://localhost:61688/tags/backend/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Indie Development</title>
-      <link>https://xifanz42.github.io/tags/indie-development/</link>
+      <link>http://localhost:61688/tags/indie-development/</link>
       <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>https://xifanz42.github.io/tags/indie-development/</guid>
+      <guid>http://localhost:61688/tags/indie-development/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Project Retrospective</title>
-      <link>https://xifanz42.github.io/tags/project-retrospective/</link>
+      <link>http://localhost:61688/tags/project-retrospective/</link>
       <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>https://xifanz42.github.io/tags/project-retrospective/</guid>
+      <guid>http://localhost:61688/tags/project-retrospective/</guid>
       <description></description>
       
     </item>
