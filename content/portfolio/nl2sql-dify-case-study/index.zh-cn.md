@@ -127,7 +127,7 @@ Chatflow 可以让你设计出很丰富的节点和分支序列，但这条序�
 
 在这段视频里，我故意先问了一个关于 `error logs` 的模糊问题。agent 并没有直接调用 coder 去生成 SQL 并查询数据库，而是先反问了一句：`你找的是通用的错误日志，还是某台特定车辆的日志`。我回答说要找特定车辆的。随后 agent 继续追问，把范围一步步收窄。
 
-<video controls muted playsinline preload="metadata" width="100%" poster="/img/leadx/demo-cover.png">
+<video controls muted playsinline preload="metadata" width="100%" poster="/img/nl2sql/cover.png">
   <source src="/video/nl2sql-demo.mp4" type="video/mp4">
   你的浏览器不支持 video 标签。
 </video>

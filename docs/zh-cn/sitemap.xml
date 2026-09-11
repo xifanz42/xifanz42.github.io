@@ -35,6 +35,22 @@
     />
   </url>
   <url>
+    <loc>https://xifanz42.github.io/zh-cn/portfolio/</loc>
+    <lastmod>2026-09-11T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://xifanz42.github.io/portfolio/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="https://xifanz42.github.io/zh-cn/portfolio/"
+    />
+  </url>
+  <url>
     <loc>https://xifanz42.github.io/zh-cn/portfolio/leadx-case-study/</loc>
     <lastmod>2026-09-03T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
@@ -80,22 +96,6 @@
       rel="alternate"
       hreflang="zh-CN"
       href="https://xifanz42.github.io/zh-cn/about/"
-    />
-  </url>
-  <url>
-    <loc>https://xifanz42.github.io/zh-cn/portfolio/</loc>
-    <lastmod>2022-06-13T21:28:51+01:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-      rel="alternate"
-      hreflang="en"
-      href="https://xifanz42.github.io/portfolio/"
-    />
-    <xhtml:link
-      rel="alternate"
-      hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/portfolio/"
     />
   </url>
   <url>

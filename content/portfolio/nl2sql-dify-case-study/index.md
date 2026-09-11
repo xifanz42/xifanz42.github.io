@@ -126,7 +126,7 @@ Finally, here's a demo walkthrough.
 
 In this video, I deliberately asked a vague question about `error logs` at first. Instead of calling the coder to generate SQL and query the database, the agent asked a follow-up: `whether I was looking for general error logs or logs for a specific vehicle`. I replied that I was looking for a specific vehicle. The agent then asked further questions to narrow down the scope.
 
-<video controls muted playsinline preload="metadata" width="100%" poster="/img/leadx/demo-cover.png">
+<video controls muted playsinline preload="metadata" width="100%" poster="/img/nl2sql/cover.png">
   <source src="/video/nl2sql-demo.mp4" type="video/mp4">
   你的浏览器不支持 video 标签。
 </video>

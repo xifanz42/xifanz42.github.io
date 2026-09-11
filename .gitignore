@@ -14,8 +14,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# NOTE: anchored to the project root on purpose — an unanchored `lib/` also matches
+# docs/lib/ (Hugo asset pipeline output, e.g. TypeIt), which must stay committed.
+/lib/
+/lib64/
 parts/
 sdist/
 var/
