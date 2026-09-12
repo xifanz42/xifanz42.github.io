@@ -31,8 +31,10 @@ layoutBackgroundHeaderSpace: false
 
 A self-built agent that pauses to ask clarifying questions before generating SQL — instead of guessing at ambiguous requests like most NL2SQL chatbots do. Built on a small classifier, a dedicated SQL coder, and a business-context database dictionary to handle real-world schema ambiguity.
 
+
 {{< carousel images="gallery/*" aspectRatio="16.5-9" interval="2500" >}}
 
+{{< github repo="xifanz42/nl2sql_agent" showThumbnail=false >}}
 
 ## 1. Background
 
@@ -130,3 +132,5 @@ In this video, I deliberately asked a vague question about `error logs` at first
   <source src="/video/nl2sql-demo.mp4" type="video/mp4">
   你的浏览器不支持 video 标签。
 </video>
+
+{{< github repo="xifanz42/nl2sql_agent" showThumbnail=false >}}

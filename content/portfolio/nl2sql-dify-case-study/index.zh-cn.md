@@ -30,8 +30,11 @@ layoutBackgroundHeaderSpace: false
 {{< /keywordList >}}
 
 ## TL;DR
-一个自研的 agent：遇到含义模糊的提问，它会先停下来追问澄清，再生成 SQL——而不是像大多数 NL2SQL chatbot 那样直接靠猜。
+一个自研的 agent：遇到含义模糊的提问，它会先停下来追问澄清，再生成 SQL——而不是像大多数 NL2SQL chatbot 那样直接靠猜。它由一个小分类器、一个专职的 SQL coder，以及一份业务视角的数据库字典构成，用来处理真实场景里的 schema 歧义。
+
 {{< carousel images="gallery/*" aspectRatio="16.5-9" interval="2500" >}}
+
+{{< github repo="xifanz42/nl2sql_agent" showThumbnail=false >}}
 
 
 ## 1. 项目背景
@@ -131,3 +134,5 @@ Chatflow 可以让你设计出很丰富的节点和分支序列，但这条序�
   <source src="/video/nl2sql-demo.mp4" type="video/mp4">
   你的浏览器不支持 video 标签。
 </video>
+
+{{< github repo="xifanz42/nl2sql_agent" showThumbnail=false >}}
