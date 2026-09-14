@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://xifanz42.github.io/sitemap.xml
