@@ -1,0 +1,57 @@
+# GitHub Actions：云端构建 Hugo 站点并部署到 gh-pages 分支
+#
+# 为什么需要它：把「构建产物 docs/」移出 git 仓库，由云端在每次 push 后自动构建。
+# 好处 1：本地 `hugo server` 再也不会把 localhost/livereload 脏数据写进 git。
+# 好处 2：git diff 永远只等于「你改了什么」，不再混入 Hugo 重生成的产物。
+#
+# 部署方式：构建结果推送到 gh-pages 分支；GitHub Pages 的来源需手动改为
+# Settings → Pages → Build and deployment → Source: "Deploy from a branch"
+# → Branch: gh-pages / folder: /(root)。
+
+name: Deploy Hugo site to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: # 允许在 Actions 页面手动点一次，排查问题时很有用
+
+# 同一时间只允许一个部署在跑，避免两个 workflow 互相覆盖 gh-pages
+concurrency:
+  group: "pages-deploy"
+  cancel-in-progress: false
+
+permissions:
+  contents: write # 推送 gh-pages 分支需要写权限
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        # 站点未启用 enableGitInfo，所以不需要 fetch-depth: 0
+        # themes/blowfish 是随仓库提交的真实目录（不是 submodule），无需 submodules: true
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          # 必须与本地 `hugo version` 保持一致，否则云端产物可能和本地不一致
+          hugo-version: "0.166.0"
+          # 本地装的是 extended 版；主题虽不依赖 libsass，但保持一致最稳妥
+          extended: true
+
+      - name: Build site
+        run: hugo
+        # publishDir = "docs"（见 config/_default/hugo.toml 第 8 行）
+        # 刻意不加 --minify：保持云端产物与本地 `hugo` 一致，便于对比排查
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          # 已知限制：主题 shortcodes/github.html 会在构建时请求 api.github.com
+          # 拉取仓库信息（stars/描述）。未鉴权限流为 60 次/小时/IP，CI 共享 IP
+          # 偶有概率被限流。该调用被 try 包裹且有错误分支，最坏情况只是卡片
+          # 不显示数据，不会导致构建失败。

@@ -14,8 +14,9 @@ dist/
 downloads/
 eggs/
 .eggs/
-# NOTE: anchored to the project root on purpose — an unanchored `lib/` also matches
-# docs/lib/ (Hugo asset pipeline output, e.g. TypeIt), which must stay committed.
+# NOTE: anchored to the project root on purpose — an unanchored `lib/` matches any
+# `lib/` at any depth. (It once swallowed docs/lib/, where Hugo writes bundled
+# assets such as TypeIt; docs/ is now fully ignored and built in CI instead.)
 /lib/
 /lib64/
 parts/
@@ -195,10 +196,13 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-# ---- Hugo (build caches + local preview output; docs/ is the deployed artifact) ----
+# ---- Hugo (build caches + build output) ----
+# docs/ 由 .github/workflows/hugo.yml 在云端构建并部署到 gh-pages 分支，
+# 本地不再提交：这样 `hugo server` 写进去的 localhost/livereload 脏数据进不了 git。
 /resources/_gen/
 /assets/_gen/
 /public/
+/docs/
 .hugo_build.lock
 .DS_Store
 .workbuddy/
