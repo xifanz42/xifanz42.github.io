@@ -29,8 +29,11 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          # 必须显式开启：themes/blowfish 是 git submodule（见 .gitmodules），
+          # checkout 默认不拉 submodule，会导致云端拿不到主题而构建失败。
+          submodules: recursive
         # 站点未启用 enableGitInfo，所以不需要 fetch-depth: 0
-        # themes/blowfish 是随仓库提交的真实目录（不是 submodule），无需 submodules: true
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
