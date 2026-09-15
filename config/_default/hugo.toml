@@ -18,6 +18,11 @@ enableEmoji = true
 
 # googleAnalytics = "G-XXXXXXXXX"
 
+[services.googleAnalytics]
+  # GA4 衡量 ID；填了之后主题会在每个页面的 <head> 注入 gtag。
+  # 注意别去取消上面第 19 行 `googleAnalytics` 的注释——Blowfish 不读它。
+  id = "G-YQ9KK9WLNC"
+
 [pagination]
   pagerSize = 42
 
