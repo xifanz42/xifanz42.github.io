@@ -1,0 +1,5331 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"><head>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent &middot; FAN</title>
+    <meta name="title" content="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent &middot; FAN">
+  
+
+  
+  
+  
+  
+  
+    
+  
+    
+  
+    
+  
+  
+    <meta name="description" content="An NL2SQL Agent translates natural-language questions into SQL, and its core design is to ask a clarifying question first when information is missing, mimicking real human interaction, rather than forcing an answer. Over the past year, as the harness idea spread and models kept getting stronger, I began to wonder whether the NL2SQL Agent I built actually has an ask-first advantage. That question is what produced this evaluation. The conclusion, up front: retrieval is the only order-of-magnitude gain. And because retrieval is essentially data processing over text, the Agent&#39;s value in single-turn conversation comes almost entirely from text data engineering.">
+  
+  
+    <meta name="keywords" content="NL2SQL,Evaluation,LLM Agent,RAG,">
+  
+  
+  
+  <link rel="canonical" href="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/">
+  
+    
+      
+      
+        <link rel="alternate" hreflang="en" href="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/">
+      
+    
+      
+      
+        <link rel="alternate" hreflang="zh-CN" href="https://xifanz42.github.io/zh-cn/articles/nl2sql-agent-eval-measurement-validity/">
+      
+    
+  
+  
+
+  
+  
+    <meta name="author" content="Xifan">
+  
+  
+    
+      
+        
+      
+    
+      
+        
+          <link href="https://github.com/xifanz42" rel="me">
+        
+      
+    
+  
+
+  
+  <meta property="og:url" content="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/">
+	<meta property="og:site_name" content="FAN">
+	<meta property="og:title" content="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">
+	<meta property="og:description" content="An NL2SQL Agent translates natural-language questions into SQL, and its core design is to ask a clarifying question first when information is missing, mimicking real human interaction, rather than forcing an answer. Over the past year, as the harness idea spread and models kept getting stronger, I began to wonder whether the NL2SQL Agent I built actually has an ask-first advantage. That question is what produced this evaluation. The conclusion, up front: retrieval is the only order-of-magnitude gain. And because retrieval is essentially data processing over text, the Agent’s value in single-turn conversation comes almost entirely from text data engineering.">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="articles">
+		<meta property="article:published_time" content="2026-10-14T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-10-14T00:00:00+00:00">
+		<meta property="article:tag" content="NL2SQL">
+		<meta property="article:tag" content="Evaluation">
+		<meta property="article:tag" content="LLM Agent">
+		<meta property="article:tag" content="RAG">
+		<meta property="og:image" content="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/featured.png">
+
+  
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/featured.png">
+	<meta name="twitter:title" content="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">
+	<meta name="twitter:description" content="An NL2SQL Agent translates natural-language questions into SQL, and its core design is to ask a clarifying question first when information is missing, mimicking real human interaction, rather than forcing an answer. Over the past year, as the harness idea spread and models kept getting stronger, I began to wonder whether the NL2SQL Agent I built actually has an ask-first advantage. That question is what produced this evaluation. The conclusion, up front: retrieval is the only order-of-magnitude gain. And because retrieval is essentially data processing over text, the Agent’s value in single-turn conversation comes almost entirely from text data engineering.">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+  
+    
+  
+  
+
+  
+  
+    <meta name="google-site-verification" content="vv6XQcPp1r31BKdT4Gt2_LHDXm-eSv6JnqmJNn7ozUA">
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.860db29460c33ee761ef90d0175ea65b5e8d6d962cc7d1f28a0f7f9d64380b90598b4cd11d09928835bddf7d062e865b81db141ee7956595c89bb3123f0a48ba.css"
+    integrity="sha512-hg2ylGDDPudh75DQF16mW16NbZYsx9Hyig9/nWQ4C5BZi0zRHQmSiDW9330GLoZbgdsUHueVZZXIm7MSPwpIug==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.764f412f07ea715415e9123a5eb5f355429502d0b760146b9bcab854bc50829dee14488594acd935dfcdc6a0fe7e6d14d7bee914ebb9272b251aa238cb52c4dd.js"
+    integrity="sha512-dk9BLwfqcVQV6RI6XrXzVUKVAtC3YBRrm8q4VLxQgp3uFEiFlKzZNd/NxqD&#43;fm0U177pFOu5JyslGqI4y1LE3Q=="></script>
+  
+
+  
+  
+    
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  <script>
+    window.BlowfishLanguageRedirectConfig = {"browserRedirectHomeOnly":true,"currentLanguage":"en","currentLanguageCode":"en","enabled":true,"fallbackLanguage":"en","isHome":false,"storageKey":"blowfish_preferred_language","storedLanguageRedirect":true,"translations":[{"lang":"en","languageCode":"en","url":"/articles/nl2sql-agent-eval-measurement-validity/"},{"lang":"zh-cn","languageCode":"zh-CN","url":"/zh-cn/articles/nl2sql-agent-eval-measurement-validity/"}]};
+  </script>
+  
+  
+    
+    <script
+      type="text/javascript"
+      src="/js/language-redirect.min.b3ca9c491b561815f9392c3509d2288e339ce6dc071b5afeaab4ab1d96a36e87332aeeba1c61b4a6865f16fd840512e5eb0c96ddff4962b46c293b8c627ba0d0.js"
+      integrity="sha512-s8qcSRtWGBX5OSw1CdIojjOc5twHG1r&#43;qrSrHZajboczKu66HGG0poZfFv2EBRLl6wyW3f9JYrRsKTuMYnug0A=="></script>
+  
+
+
+  
+  
+  
+  
+  
+  
+    
+    <script defer src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+    
+    <script defer src="/js/medium-zoom.67b71ecf7eecce38673a92244d1ffd93edb5f1aeedd12e725d0f67fe901828fa3562f6a6d64ad290b36b7d7034b8ea16e63486d75d957bcf6a2732923e5d46e6.js" integrity="sha512-Z7cez37szjhnOpIkTR/9k&#43;218a7t0S5yXQ9n/pAYKPo1Yvam1krSkLNrfXA0uOoW5jSG112Ve89qJzKSPl1G5g=="></script>
+  
+  
+  
+  
+
+  
+  
+  
+    
+  
+  
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.221b84d3b2e59e5c6a90e4478bf70f9b4fe7739e6f4ac7e3428a46067c88dc7cf4a338690c89753c16aa0600fbc156125f6f2ce34a9aa300dcc7a367f3e90e9e.js"
+      integrity="sha512-IhuE07LlnlxqkORHi/cPm0/nc55vSsfjQopGBnyI3Hz0ozhpDIl1PBaqBgD7wVYSX28s40qaowDcx6Nn8&#43;kOng=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/lib/katex/katex.min.0a382f21b7d7c21ce3382b4ffb0b9030f189679b84636907678a8f1af8c881f913885767b83985fa8256d81e60963eddece90f3c35fd04cbb88438a8e4c59310.css"
+    integrity="sha512-CjgvIbfXwhzjOCtP&#43;wuQMPGJZ5uEY2kHZ4qPGvjIgfkTiFdnuDmF&#43;oJW2B5glj7d7OkPPDX9BMu4hDio5MWTEA==">
+  
+  
+  
+  <script
+    defer
+    type="text/javascript"
+    src="/js/katex.bundle.aaff004b8aa4f0c26b0bd6d5583567fa8b40bc2d5cc81519ea0e31745bb9436d84210a94335d1b0aae44023ff8d563f805fefcd92a7152b71af639d1a9ba9b91.js"
+    integrity="sha512-qv8AS4qk8MJrC9bVWDVn&#43;otAvC1cyBUZ6g4xdFu5Q22EIQqUM10bCq5EAj/41WP4Bf782SpxUrca9jnRqbqbkQ=="
+    id="katex-render"></script>
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+  <link rel="stylesheet" href="/css/repo-cards.min.7bbeaab135bf9de7bbb9f5636f13341c57728cf3b2636394c02f5e5885bb1d1fec6f4e5850215455be91bcc4b648893d9a1240beee50d7188d7ee8c8cf13b95b.css" integrity="sha512-e76qsTW/nee7ufVjbxM0HFdyjPOyY2OUwC9eWIW7HR/sb05YUCFUVb6RvMS2SIk9mhJAvu5Q1xiNfujIzxO5Ww==">
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Articles",
+    "name": "Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent",
+    "headline": "Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent",
+    
+    "inLanguage": "en",
+    "url" : "https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/",
+    "author" : {
+      "@type": "Person",
+      "name": "Xifan",
+      "image": "https://xifanz42.github.io/img/avatar.jpg",
+      "sameAs": ["https://github.com/xifanz42"]
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-10-14T00:00:00\u002b00:00",
+    "datePublished": "2026-10-14T00:00:00\u002b00:00",
+    
+    "dateModified": "2026-10-14T00:00:00\u002b00:00",
+    
+    "keywords": ["NL2SQL","Evaluation","LLM Agent","RAG"],
+    
+    "mainEntityOfPage": "https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/",
+    "wordCount":  6205 
+  }]
+  </script>
+
+
+
+  
+  
+    
+
+  <script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-YQ9KK9WLNC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YQ9KK9WLNC');
+</script>
+
+
+
+
+
+  
+
+  
+  
+    
+
+  
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "yk3e1tw4zc");
+    </script>
+  
+
+
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+
+
+
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral bf-scrollbar">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    <header>
+      
+      
+        <div class="min-h-32"></div>
+<div class="fixed inset-x-0 top-3 z-100 px-3 sm:top-5 sm:px-6">
+  <div class="mx-auto max-w-7xl rounded-2xl border border-neutral-200/80 bg-neutral/60 px-3 shadow-lg shadow-neutral-900/5 backdrop-blur-xl dark:border-neutral-700/80 dark:bg-neutral-800/60 [&_img.logo]:max-h-10 [&_img.logo]:max-w-10">
+    <div class="main-menu flex items-center w-full gap-2 p-1 pl-0">
+  
+  
+    <a href="/" class="text-base font-medium truncate min-w-0 shrink">
+      FAN
+    </a>
+  
+  <div class="flex items-center ms-auto">
+    <div class="hidden md:flex">
+      <nav aria-label="Main menu" class="flex items-center gap-x-5 h-12">
+  
+    
+      
+  
+    <a
+      href="/portfolio/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Portfolio"
+      title="Portfolio">
+      
+        <span class="mr-1">
+          
+        </span>
+      
+      
+        <span class="text-sm font-medium break-normal">
+          Portfolio
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="/articles/"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Articles"
+      title="Articles">
+      
+        <span class="mr-1">
+          
+        </span>
+      
+      
+        <span class="text-sm font-medium break-normal">
+          Articles
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="https://github.com/xifanz42"
+      
+        target="_blank"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="github"
+      title="">
+      
+        <span >
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span>
+        </span>
+      
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="xifan.zou@outlook.com"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="email"
+      title="">
+      
+        <span >
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"/></svg>
+</span>
+        </span>
+      
+      
+    </a>
+  
+
+    
+  
+
+  
+  <div class="translation nested-menu">
+    <button class="cursor-pointer flex items-center">
+      <span class="me-1">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+    <path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg></span>
+      </span>
+      <span class="text-sm font-medium bf-icon-color-hover" title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">EN</span>
+    </button>
+    <ul class="menuhide">
+      <li class="rounded-xl border border-neutral-200/80 bg-neutral/95 shadow-2xl shadow-neutral-900/20 dark:border-neutral-700/80 dark:bg-neutral-800/95 p-2 flex flex-col gap-1">
+        
+          <a href="/articles/nl2sql-agent-eval-measurement-validity/" class="flex items-center bf-icon-color-hover px-3 py-1">
+            <span class="text-sm font-sm" title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">
+              EN
+            </span>
+          </a>
+        
+          <a href="/zh-cn/articles/nl2sql-agent-eval-measurement-validity/" class="flex items-center bf-icon-color-hover px-3 py-1">
+            <span class="text-sm font-sm" title="文本数据工程最为重要？单轮会话下NL2SQL Agent的能力评测">
+              简体中文
+            </span>
+          </a>
+        
+      </li>
+    </ul>
+  </div>
+
+
+  
+
+  
+    <div class="flex items-center">
+      <button
+        id="appearance-switcher"
+        aria-label="Switch to dark appearance"
+        type="button"
+        class="text-sm bf-icon-color-hover"
+        title="Switch to dark appearance">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    </div>
+  
+
+  
+    <button
+      id="search-button"
+      aria-label="Search (/ or ⌘K)"
+      class="flex items-center gap-2 rounded-lg border bf-border-color bf-border-color-hover bg-neutral-100/50 px-2 py-1 text-sm text-neutral-500 transition-colors hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:text-primary-400"
+      title="Search (/ or ⌘K)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      <kbd
+        id="search-shortcut-hint"
+        class="pointer-events-none font-sans text-xs text-neutral-500 dark:text-neutral-400"
+        aria-hidden="true">
+        ⌘K
+      </kbd>
+    </button>
+  
+</nav>
+
+
+
+    </div>
+    <div class="flex md:hidden">
+      
+<div class="mobile-header-row relative flex items-center h-14 gap-4">
+  
+    
+  <div class="translation nested-menu">
+    <button class="cursor-pointer flex items-center">
+      <span class="me-1">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+    <path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"/></svg></span>
+      </span>
+      <span class="text-sm font-medium bf-icon-color-hover" title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">EN</span>
+    </button>
+    <ul class="menuhide">
+      <li class="rounded-xl border border-neutral-200/80 bg-neutral/95 shadow-2xl shadow-neutral-900/20 dark:border-neutral-700/80 dark:bg-neutral-800/95 p-2 flex flex-col gap-1">
+        
+          <a href="/articles/nl2sql-agent-eval-measurement-validity/" class="flex items-center bf-icon-color-hover px-3 py-1">
+            <span class="text-sm font-sm" title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">
+              EN
+            </span>
+          </a>
+        
+          <a href="/zh-cn/articles/nl2sql-agent-eval-measurement-validity/" class="flex items-center bf-icon-color-hover px-3 py-1">
+            <span class="text-sm font-sm" title="文本数据工程最为重要？单轮会话下NL2SQL Agent的能力评测">
+              简体中文
+            </span>
+          </a>
+        
+      </li>
+    </ul>
+  </div>
+
+
+  
+
+  
+    <button
+      id="appearance-switcher-mobile"
+      type="button"
+      aria-label="Switch to dark appearance"
+      title="Switch to dark appearance"
+      class="flex items-center justify-center text-neutral-900 hover:text-primary-600 dark:text-neutral-200 dark:hover:text-primary-400">
+      <div class="dark:hidden">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+      </div>
+      <div class="hidden dark:block">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+      </div>
+    </button>
+  
+
+  
+    <button
+      id="search-button-mobile"
+      aria-label="Search (/ or ⌘K)"
+      class="flex items-center justify-center bf-icon-color-hover"
+      title="Search (/ or ⌘K)">
+      <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+    </button>
+  
+
+  
+    <input type="checkbox" id="mobile-menu-toggle" autocomplete="off" class="hidden peer">
+    <label
+      for="mobile-menu-toggle"
+      tabindex="0"
+      role="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu-dialog"
+      aria-label="Main menu"
+      class="flex items-center justify-center cursor-pointer bf-icon-color-hover">
+      <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+    </label>
+
+    <div
+      id="mobile-menu-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Main menu"
+      style="scrollbar-gutter: stable;"
+      class="z-50 invisible overflow-y-auto opacity-0 transition-[opacity,visibility] duration-300 peer-checked:visible peer-checked:opacity-100
+      
+        absolute end-0 top-[calc(100%+0.75rem)] z-10 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-neutral-200/80 bg-neutral/95 p-5 shadow-2xl shadow-neutral-900/20 dark:border-neutral-700/80 dark:bg-neutral-800/95
+      
+      bf-scrollbar">
+      <label
+        for="mobile-menu-toggle"
+        tabindex="0"
+        role="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu-dialog"
+        class="absolute end-3 top-3 h-10 w-10 rounded-xl flex items-center justify-center cursor-pointer select-none bf-icon-color-hover border bf-border-color bf-border-color-hover bg-neutral-50 dark:bg-neutral-900">
+        <span class="sr-only">Close menu</span>
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </label>
+      <nav
+        aria-label="Mobile menu"
+        class="mt-10 space-y-3">
+        
+  
+    
+    <div class="px-2">
+      <div class="flex items-center gap-4">
+        <a
+          href="/portfolio/"
+          aria-label="Portfolio"
+          
+          class="flex grow items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+          
+            <span class="flex items-center justify-center h-8 w-8 text-2xl">
+              
+            </span>
+          
+          <span title="Portfolio" class="text-2xl font-bold tracking-tight">
+            Portfolio
+          </span>
+        </a>
+        
+      </div>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <div class="flex items-center gap-4">
+        <a
+          href="/articles/"
+          aria-label="Articles"
+          
+          class="flex grow items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+          
+            <span class="flex items-center justify-center h-8 w-8 text-2xl">
+              
+            </span>
+          
+          <span title="Articles" class="text-2xl font-bold tracking-tight">
+            Articles
+          </span>
+        </a>
+        
+      </div>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <div class="flex items-center gap-4">
+        <a
+          href="https://github.com/xifanz42"
+          aria-label="github"
+          
+            target="_blank"
+          
+          class="flex grow items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+          
+            <span class="flex items-center justify-center h-8 w-8 text-2xl">
+              <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span>
+            </span>
+          
+          <span title="" class="text-2xl font-bold tracking-tight">
+            
+          </span>
+        </a>
+        
+      </div>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <div class="flex items-center gap-4">
+        <a
+          href="xifan.zou@outlook.com"
+          aria-label="email"
+          
+          class="flex grow items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+          
+            <span class="flex items-center justify-center h-8 w-8 text-2xl">
+              <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"/></svg>
+</span>
+            </span>
+          
+          <span title="" class="text-2xl font-bold tracking-tight">
+            
+          </span>
+        </a>
+        
+      </div>
+
+      
+    </div>
+  
+
+        
+  
+    <div class="flex flex-wrap gap-4 mt-8 pt-8 border-t bf-border-color">
+      
+        <a
+          href="/articles/nl2sql-agent-eval-measurement-validity/"
+          aria-label="Does text data engineering matter most?"
+          class="inline-flex items-center gap-2 px-2 py-2 bf-icon-color-hover rounded-full text-sm">
+          
+          <span title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">Does text data engineering matter most?</span>
+        </a>
+      
+    </div>
+  
+
+        
+  
+
+      </nav>
+    </div>
+  
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+  <nav id="main-menu" aria-label="Main menu">
+    <div
+      class="main-menu flex pb-3 flex-col items-end justify-between md:justify-start space-x-3 ">
+      <div class="hidden md:flex items-center space-x-5">
+        
+          <a
+            href="/articles/nl2sql-agent-eval-measurement-validity/"
+            
+            class="flex items-center bf-icon-color-hover">
+            
+            <span class="text-xs font-light" title="Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent">
+              Does text data engineering matter most?
+            </span>
+          </a>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+  <script>
+    (function () {
+      var mainmenu = document.querySelector(".main-menu");
+      if (!mainmenu) return;
+
+      var path = window.location.pathname;
+      var links = mainmenu.querySelectorAll('a[href="' + path + '"]');
+
+      links.forEach(function (link) {
+        var targets = link.querySelectorAll("span");
+        targets.forEach(function (el) {
+          el.classList.add("active");
+        });
+      });
+    })();
+  </script>
+
+
+  </div>
+</div>
+
+      
+    </header>
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  
+  
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-10-14T00:00:00&#43;00:00">14 October 2026</time><span class="px-2 text-primary-500">&middot;</span><span>6205 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">13 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/categories/engineering/">
+                  
+                  <span class="flex cursor-pointer">
+  
+  
+  
+    
+    
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    Engineering
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+        
+      
+        
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/tags/nl2sql/">
+                  <span class="flex cursor-pointer">
+  
+  
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    NL2SQL
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/tags/evaluation/">
+                  <span class="flex cursor-pointer">
+  
+  
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    Evaluation
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/tags/llm-agent/">
+                  <span class="flex cursor-pointer">
+  
+  
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    LLM Agent
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+            
+              
+                <a class="relative mt-[0.5rem] me-2" href="/tags/rag/">
+                  <span class="flex cursor-pointer">
+  
+  
+  
+  
+    <span
+      class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+  
+    RAG
+  </span>
+</span>
+
+                </a>
+              
+            
+          
+        
+      
+    </div>
+  
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+      
+      
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Xifan"
+        src="/img/avatar.jpg"
+        data-zoom-src="/img/avatar.jpg">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Xifan
+      </div>
+    
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500 space-x-2">
+    
+      
+        
+        <a
+          class="email-link hover:text-primary-700 dark:hover:text-primary-400"
+          href="#"
+          
+            data-email="bWFpbHRvOnhpZmFuLnpvdUBvdXRsb29rLmNvbQ=="
+          
+          target="_blank"
+          aria-label="Email"
+          title="Email"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        
+        <a
+          class=" hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/xifanz42"
+          
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+    
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+        <div class="order-first lg:ms-auto px-0 lg:order-last lg:ps-8 lg:max-w-2xs">
+          <div class="toc ps-5 print:hidden lg:sticky lg:top-[140px]">
+            <details
+  open
+  id="TOCView"
+  class="toc-right mt-0 overflow-y-auto overscroll-contain bf-scrollbar rounded-lg -ms-5 ps-5 pe-2 hidden lg:block">
+  <summary
+    class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContents" aria-label="Table of Contents">
+  <ul>
+    <li><a href="#1-background-and-goal">1. Background and Goal</a></li>
+    <li><a href="#2-evaluation-system-design">2. Evaluation System Design</a>
+      <ul>
+        <li><a href="#21-dataset">2.1 Dataset</a></li>
+        <li><a href="#22-test-case-design">2.2 Test Case Design</a>
+          <ul>
+            <li><a href="#221-expected-behavior-categories">2.2.1 Expected-Behavior Categories</a></li>
+            <li><a href="#222-difficulty-strata">2.2.2 Difficulty Strata</a></li>
+          </ul>
+        </li>
+        <li><a href="#23-systems-under-test">2.3 Systems Under Test</a>
+          <ul>
+            <li><a href="#231-output-contract-layer">2.3.1 Output Contract Layer</a></li>
+            <li><a href="#232-model-selection">2.3.2 Model Selection</a></li>
+            <li><a href="#233-other-controlled-variables">2.3.3 Other Controlled Variables</a></li>
+          </ul>
+        </li>
+        <li><a href="#24-metric-design">2.4 Metric Design</a>
+          <ul>
+            <li><a href="#241-quality-metrics">2.4.1 Quality Metrics</a></li>
+            <li><a href="#242-behavior-metrics">2.4.2 Behavior Metrics</a></li>
+            <li><a href="#243-cost-metrics">2.4.3 Cost Metrics</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#3-results">3. Results</a>
+      <ul>
+        <li><a href="#31-overall-table">3.1 Overall Table</a>
+          <ul>
+            <li><a href="#311-reading-preconditions">3.1.1 Reading Preconditions</a></li>
+            <li><a href="#312-net-effect-of-the-contract-layer">3.1.2 Net Effect of the Contract Layer</a></li>
+          </ul>
+        </li>
+        <li><a href="#32-quality-metrics">3.2 Quality Metrics</a>
+          <ul>
+            <li><a href="#321-ex">3.2.1 EX</a></li>
+            <li><a href="#322-executability">3.2.2 Executability</a></li>
+          </ul>
+        </li>
+        <li><a href="#33-behavior-metrics">3.3 Behavior Metrics</a>
+          <ul>
+            <li><a href="#331-presumption-rate-and-over-clarify-rate">3.3.1 Presumption Rate and Over-Clarify Rate</a></li>
+            <li><a href="#332-balanced-accuracy">3.3.2 Balanced Accuracy</a></li>
+            <li><a href="#333-abstention-behavior">3.3.3 Abstention Behavior</a></li>
+          </ul>
+        </li>
+        <li><a href="#34-cost">3.4 Cost</a>
+          <ul>
+            <li><a href="#341-economic-cost">3.4.1 Economic Cost</a></li>
+            <li><a href="#342-experience-cost">3.4.2 Experience Cost</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#4-conclusion">4. Conclusion</a>
+      <ul>
+        <li><a href="#41-conclusion">4.1 Conclusion</a></li>
+        <li><a href="#42-how-model-selection-affects-the-results">4.2 How Model Selection Affects the Results</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</details>
+<details class="toc-inside mt-0 overflow-hidden rounded-lg -ms-5 ps-5 lg:hidden">
+  <summary
+    class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContentsMobile" aria-label="Table of Contents">
+  <ul>
+    <li><a href="#1-background-and-goal">1. Background and Goal</a></li>
+    <li><a href="#2-evaluation-system-design">2. Evaluation System Design</a>
+      <ul>
+        <li><a href="#21-dataset">2.1 Dataset</a></li>
+        <li><a href="#22-test-case-design">2.2 Test Case Design</a>
+          <ul>
+            <li><a href="#221-expected-behavior-categories">2.2.1 Expected-Behavior Categories</a></li>
+            <li><a href="#222-difficulty-strata">2.2.2 Difficulty Strata</a></li>
+          </ul>
+        </li>
+        <li><a href="#23-systems-under-test">2.3 Systems Under Test</a>
+          <ul>
+            <li><a href="#231-output-contract-layer">2.3.1 Output Contract Layer</a></li>
+            <li><a href="#232-model-selection">2.3.2 Model Selection</a></li>
+            <li><a href="#233-other-controlled-variables">2.3.3 Other Controlled Variables</a></li>
+          </ul>
+        </li>
+        <li><a href="#24-metric-design">2.4 Metric Design</a>
+          <ul>
+            <li><a href="#241-quality-metrics">2.4.1 Quality Metrics</a></li>
+            <li><a href="#242-behavior-metrics">2.4.2 Behavior Metrics</a></li>
+            <li><a href="#243-cost-metrics">2.4.3 Cost Metrics</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#3-results">3. Results</a>
+      <ul>
+        <li><a href="#31-overall-table">3.1 Overall Table</a>
+          <ul>
+            <li><a href="#311-reading-preconditions">3.1.1 Reading Preconditions</a></li>
+            <li><a href="#312-net-effect-of-the-contract-layer">3.1.2 Net Effect of the Contract Layer</a></li>
+          </ul>
+        </li>
+        <li><a href="#32-quality-metrics">3.2 Quality Metrics</a>
+          <ul>
+            <li><a href="#321-ex">3.2.1 EX</a></li>
+            <li><a href="#322-executability">3.2.2 Executability</a></li>
+          </ul>
+        </li>
+        <li><a href="#33-behavior-metrics">3.3 Behavior Metrics</a>
+          <ul>
+            <li><a href="#331-presumption-rate-and-over-clarify-rate">3.3.1 Presumption Rate and Over-Clarify Rate</a></li>
+            <li><a href="#332-balanced-accuracy">3.3.2 Balanced Accuracy</a></li>
+            <li><a href="#333-abstention-behavior">3.3.3 Abstention Behavior</a></li>
+          </ul>
+        </li>
+        <li><a href="#34-cost">3.4 Cost</a>
+          <ul>
+            <li><a href="#341-economic-cost">3.4.1 Economic Cost</a></li>
+            <li><a href="#342-experience-cost">3.4.2 Experience Cost</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#4-conclusion">4. Conclusion</a>
+      <ul>
+        <li><a href="#41-conclusion">4.1 Conclusion</a></li>
+        <li><a href="#42-how-model-selection-affects-the-results">4.2 How Model Selection Affects the Results</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</details>
+
+
+<script>
+  (function () {
+    'use strict'
+
+    const SCROLL_OFFSET_RATIO = 0.33
+    const TOC_SELECTOR = '#TableOfContents'
+    const ANCHOR_SELECTOR = '.anchor'
+    const TOC_LINK_SELECTOR = 'a[href^="#"]'
+    const NESTED_LIST_SELECTOR = 'li ul'
+    const ACTIVE_CLASS = 'active'
+    let isJumpingToAnchor = false
+
+    function getActiveAnchorId(anchors, offsetRatio) {
+      const threshold = window.scrollY + window.innerHeight * offsetRatio
+      const tocLinks = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+      const tocIds = new Set(tocLinks.map(link => link.getAttribute('href').substring(1)))
+
+      if (isJumpingToAnchor) {
+        for (let i = 0; i < anchors.length; i++) {
+          const anchor = anchors[i]
+          if (!tocIds.has(anchor.id)) continue
+          const top = anchor.getBoundingClientRect().top + window.scrollY
+          if (Math.abs(window.scrollY - top) < 100) {
+            return anchor.id
+          }
+        }
+      }
+
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        const top = anchors[i].getBoundingClientRect().top + window.scrollY
+        if (top <= threshold && tocIds.has(anchors[i].id)) {
+          return anchors[i].id
+        }
+      }
+      return anchors.find(anchor => tocIds.has(anchor.id))?.id || ''
+    }
+
+    function updateTOC({ toc, anchors, links, scrollOffset, collapseInactive }) {
+      const activeId = getActiveAnchorId(anchors, scrollOffset)
+      if (!activeId) return
+
+      links.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`
+        link.classList.toggle(ACTIVE_CLASS, isActive)
+
+        if (collapseInactive) {
+          const ul = link.closest('li')?.querySelector('ul')
+          if (ul) ul.style.display = isActive ? '' : 'none'
+        }
+      })
+
+      if (collapseInactive) {
+        const activeLink = toc.querySelector(`a[href="#${CSS.escape(activeId)}"]`)
+        let el = activeLink
+        while (el && el !== toc) {
+          if (el.tagName === 'UL') el.style.display = ''
+          if (el.tagName === 'LI') el.querySelector('ul')?.style.setProperty('display', '')
+          el = el.parentElement
+        }
+      }
+    }
+
+    function initTOC() {
+      const toc = document.querySelector(TOC_SELECTOR)
+      if (!toc) return
+
+      const collapseInactive = true
+      const anchors = [...document.querySelectorAll(ANCHOR_SELECTOR)]
+      const links = [...toc.querySelectorAll(TOC_LINK_SELECTOR)]
+
+      if (collapseInactive) {
+        toc.querySelectorAll(NESTED_LIST_SELECTOR).forEach(ul => ul.style.display = 'none')
+      }
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          isJumpingToAnchor = true
+        })
+      })
+
+      const config = {
+        toc,
+        anchors,
+        links,
+        scrollOffset: SCROLL_OFFSET_RATIO,
+        collapseInactive
+      }
+
+      window.addEventListener('scroll', () => updateTOC(config), { passive: true })
+      window.addEventListener('hashchange', () => updateTOC(config), { passive: true })
+
+      updateTOC(config)
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', initTOC)
+      : initTOC()
+  })()
+</script>
+
+
+          </div>
+        </div>
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          
+
+
+
+
+
+
+<div
+  id="accordion-6d0c09fff4b1ac5b5066c92e8c36e6c4"
+  class="space-y-2"
+  data-accordion="open"
+  data-accordion-separated="true"
+>
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<details
+  class="group rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden"
+  data-accordion-item
+  open
+>
+  <summary class="flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-3 text-left text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+    <span class="flex items-center gap-2">
+      
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S224 177.7 224 160C224 142.3 238.3 128 256 128zM296 384h-80C202.8 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h32c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg>
+</span>
+      
+      <span>TL;DR</span>
+    </span>
+    <span class="accordion-chevron ms-auto flex h-5 w-5 items-center justify-center print:hidden">
+      <span class="relative block icon"><svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 20 20"
+  fill="currentColor"
+  aria-hidden="true"
+>
+  <path
+    fill-rule="evenodd"
+    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+    clip-rule="evenodd"
+  />
+</svg>
+</span>
+    </span>
+  </summary>
+<div class="px-4 pb-4 text-neutral-700 dark:text-neutral-300">
+    <ul>
+<li><strong>Evaluation design</strong>: 90 test cases, a read-only database sandbox, <strong>single-turn interaction</strong>, 3 generative models × 3 systems (<code>direct</code> → <code>direct+rag</code> → <code>harness</code>), each run once.</li>
+<li><strong>Retrieval is the only order-of-magnitude gain</strong>: adding retrieval alone lifts EX from 6.9%~32.9% to 43.8%~54.8%, and lifts the behavior decision from the zero-ability line to 79%~90% balanced accuracy.</li>
+<li><strong>The output contract layer only buys a layer of post-processing</strong>: its EX gain shrinks as the baseline&rsquo;s own executability rises (Qwen +11.0 → V3 +2.8 → flash 0.0, and only the Qwen point sits outside the jitter band). What it really fixes is <strong>output hygiene</strong>. In single-turn interaction, the Agent architecture&rsquo;s value is carried mainly by retrieval and the prompt.</li>
+<li><strong>Retrieval is, in essence, data processing over text</strong>, and text is data too, so in the single-turn setting this Agent&rsquo;s value comes almost entirely from <code>text data engineering</code>. <strong>Scope</strong>: it covers single-turn SQL generation only, and leaves out multi-turn, exploration routing, execution and result analysis.</li>
+<li><strong>Abstention behavior is the most model-sensitive</strong>: flash never abstains and its behavior collapses back to the zero-ability line, while Qwen is good at <code>clarify</code> and V3 at <code>refuse</code>. The main differences likely come from <strong>post-training and decoding</strong> rather than architecture.</li>
+</ul>
+
+  </div>
+</details>
+
+</div>
+
+<style>
+  #accordion-6d0c09fff4b1ac5b5066c92e8c36e6c4 > details + details {
+    margin-top: 0.5rem;
+  }
+</style>
+
+<style>
+  #accordion-6d0c09fff4b1ac5b5066c92e8c36e6c4 details[data-accordion-item] > summary .accordion-chevron {
+    transform: rotate(-90deg);
+    transition: transform 200ms ease-in-out;
+  }
+  #accordion-6d0c09fff4b1ac5b5066c92e8c36e6c4 details[data-accordion-item][open] > summary .accordion-chevron {
+    transform: rotate(0deg);
+  }
+</style>
+
+
+
+<h2 class="relative group">1. Background and Goal
+    <div id="1-background-and-goal" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#1-background-and-goal" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The NL2SQL Agent translates natural-language questions into SQL queries. Its core design is to ask a clarifying question first when information is insufficient, mimicking real human interaction, rather than forcing an answer. The project started in March 2025, and a detailed write-up is in the portfolio: <a href="/portfolio/nl2sql-dify-case-study/" >NL2SQL Agent: Ask Before You Query</a>.</p>
+<p>Over the past year, the harness idea has grown more popular and models have kept getting stronger, which raised a question for me: does the NL2SQL Agent I built back then actually have an <strong>ask-first advantage</strong>? That question is what produced this evaluation design and evaluation.</p>
+<div class="github-card-wrapper">
+    <a id="github-cf33bfe81d87720c956a25482e1f688d" target="_blank" href="https://github.com/xifanz42/nl2sql_agent" class="cursor-pointer">
+      <div
+        class="w-full md:w-auto p-0 m-0 border border-neutral-200 dark:border-neutral-700 border rounded-md shadow-2xl"><div class="w-full md:w-auto pt-3 p-5">
+          <div class="flex items-center">
+            <span class="text-2xl text-neutral-800 dark:text-neutral me-2">
+              <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span>
+            </span>
+            <div
+              id="github-cf33bfe81d87720c956a25482e1f688d-full_name"
+              class="m-0 font-bold text-xl text-neutral-800 decoration-primary-500 hover:underline hover:underline-offset-2 dark:text-neutral">
+              xifanz42/nl2sql_agent
+            </div>
+          </div>
+
+          <p id="github-cf33bfe81d87720c956a25482e1f688d-description" class="m-0 mt-2 text-md text-neutral-800 dark:text-neutral">
+            轻量化自然语言数据库查询工具，支持多轮对话完善查询目标，精确输出SQL查询语句、执行查询、数据分析并返回自然语言结果。A lightweight system enbales multiple rounds of chat to transfer natural language into SQL query, execute query, perform data analysis and return analysis results.
+          </p>
+
+          <div class="m-0 mt-2 flex items-center">
+            <span class="mr-1 inline-block h-3 w-3 rounded-full language-dot" data-language="Python"></span>
+            <div class="m-0 mr-5 text-md text-neutral-800 dark:text-neutral">
+              Python
+            </div>
+
+            <span class="text-md mr-1 text-neutral-800 dark:text-neutral">
+              <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"/></svg></span>
+            </span>
+            <div id="github-cf33bfe81d87720c956a25482e1f688d-stargazers" class="m-0 mr-5 text-md text-neutral-800 dark:text-neutral">
+              16
+            </div>
+
+            <span class="text-md mr-1 text-neutral-800 dark:text-neutral">
+              <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M80 104c13.3 0 24-10.7 24-24s-10.7-24-24-24S56 66.7 56 80s10.7 24 24 24zm80-24c0 32.8-19.7 61-48 73.3V192c0 17.7 14.3 32 32 32H304c17.7 0 32-14.3 32-32V153.3C307.7 141 288 112.8 288 80c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V192c0 53-43 96-96 96H256v70.7c28.3 12.3 48 40.5 48 73.3c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-32.8 19.7-61 48-73.3V288H144c-53 0-96-43-96-96V153.3C19.7 141 0 112.8 0 80C0 35.8 35.8 0 80 0s80 35.8 80 80zm208 24c13.3 0 24-10.7 24-24s-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24zM248 432c0-13.3-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24s24-10.7 24-24z"/></svg></span>
+            </span>
+            <div id="github-cf33bfe81d87720c956a25482e1f688d-forks" class="m-0 mr-5 text-md text-neutral-800 dark:text-neutral">
+              2
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <script
+        async
+        type="text/javascript"
+        src="/js/fetch-repo.min.dc5533c50cefd50405344b235937142271f26229fe39cbee27fd4960e8bb897a0beebfad77a1091ca91cd0d1fb14e70fc37cc114dd9674fb2c32e0ab512ec8a4.js"
+        integrity="sha512-3FUzxQzv1QQFNEsjWTcUInHyYin&#43;OcvuJ/1JYOi7iXoL7r&#43;td6EJHKkc0NH7FOcPw3zBFN2WdPssMuCrUS7IpA=="
+        data-repo-url="https://api.github.com/repos/xifanz42/nl2sql_agent"
+        data-repo-id="github-cf33bfe81d87720c956a25482e1f688d"></script>
+    </a>
+  </div>
+
+<h2 class="relative group">2. Evaluation System Design
+    <div id="2-evaluation-system-design" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#2-evaluation-system-design" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>At first I used a golden-standard dataset of 90 cases and simply compared the NL2SQL Agent against a direct LLM call. The result was that the evaluation design was too crude, and <strong>it could not evaluate the act of asking a clarifying question at all</strong>. The main problems:</p>
+<ul>
+<li><strong>The dataset was not rigorous enough</strong>: 13 cases referenced metrics that do not exist in the database, so every system would necessarily score 0 on them; 27 cases treated text columns as dates, even though in the database those date values are stored as text (this was deliberate, originally meant to test the NL2SQL Agent&rsquo;s ability).</li>
+<li><strong>The test-case design contradicted the test goal</strong>: the dataset had only a question column and an expected-SQL column, so every case implicitly required SQL output. That scoring rule turned into <strong>rewarding guessed SQL and punishing clarifying questions</strong>, which is the exact opposite of the system&rsquo;s design goal.</li>
+<li><strong>The metric design was too narrow</strong>: metrics focused on SQL-generation accuracy and schema consistency, which, just like the problems above, also <strong>punished clarifying behavior</strong>. A system that correctly asks the user a question would instead be marked as producing a wrong output.</li>
+</ul>
+<p>So after several iterations, the later evaluation experiments follow two principles:</p>
+<ol>
+<li>Every test case must state its <strong>expected behavior</strong> explicitly: answer directly with SQL, ask for clarification, or refuse to answer?</li>
+<li>Metrics must not be aggregated into a single number, but evaluated along several dimensions.</li>
+</ol>
+<p>The four sections below all describe the improved evaluation system design (dataset adjustments, test-case design, systems under test, metric design, and so on).</p>
+
+<h3 class="relative group">2.1 Dataset
+    <div id="21-dataset" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#21-dataset" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The evaluation data is a <strong>simulated</strong> vehicle-KPI table <code>kpi_benchmark</code> for a port-logistics site, stored in PostgreSQL:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Category</th>
+					<th>Content</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Scale</td>
+					<td>360 rows spanning 6 days (2025-08-15 ~ 08-20), all recorded at <code>00:00:00Z</code></td>
+			</tr>
+			<tr>
+					<td>Dimensions</td>
+					<td><code>vehicle_id</code>, <code>vehicle_type</code> (<code>AT</code> automated transfer vehicle / <code>MT</code> manual vehicle)</td>
+			</tr>
+			<tr>
+					<td>Metrics</td>
+					<td>3 <code>index_category</code> values, 10 concrete metrics <code>index_name</code>, metric values <code>index_value</code></td>
+			</tr>
+	</tbody>
+</table>
+
+<h3 class="relative group">2.2 Test Case Design
+    <div id="22-test-case-design" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#22-test-case-design" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+
+<h4 class="relative group">2.2.1 Expected-Behavior Categories
+    <div id="221-expected-behavior-categories" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#221-expected-behavior-categories" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Building on the analysis above, the 90 test cases were split into 3 expected behaviors: answering the SQL query (<code>answer</code>), asking for clarification (<code>clarify</code>), and refusing to answer (<code>refuse</code>). The final split is <strong>73 <code>answer</code>, 3 <code>clarify</code>, 14 <code>refuse</code></strong>.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Situation</th>
+					<th>N</th>
+					<th>Expected behavior</th>
+					<th>Explanation</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>The user asks about a metric that does not exist in the database</td>
+					<td>13</td>
+					<td><code>refuse</code></td>
+					<td>No executable query exists, so any answer would be fabricated</td>
+			</tr>
+			<tr>
+					<td>Depends on <code>CURRENT_DATE</code>, so results drift with the date</td>
+					<td>1</td>
+					<td><code>refuse</code></td>
+					<td>No stable, reproducible correct answer</td>
+			</tr>
+			<tr>
+					<td>The question is vague, with several queryable directions</td>
+					<td>3</td>
+					<td><code>clarify</code></td>
+					<td>The user needs to supply the metric or range</td>
+			</tr>
+			<tr>
+					<td>The rest</td>
+					<td>73</td>
+					<td><code>answer</code></td>
+					<td>The question is clear and the data is sufficient</td>
+			</tr>
+	</tbody>
+</table>
+
+<h4 class="relative group">2.2.2 Difficulty Strata
+    <div id="222-difficulty-strata" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#222-difficulty-strata" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Besides the behavior categories, the cases were also split into <strong>difficulty strata</strong> by the syntactic features of the SQL. Here <code>hard</code> concentrates on multi-condition filtering, subqueries and time aggregation, and this classification measures the <strong>complexity of the query itself</strong>.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Stratum</th>
+					<th>Rule (any one qualifies)</th>
+					<th>N</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>easy</code></td>
+					<td>Single-table equality filter only</td>
+					<td>3</td>
+			</tr>
+			<tr>
+					<td><code>medium</code></td>
+					<td>Contains <code>GROUP BY</code>, <code>ORDER BY</code>, <code>LIMIT</code>, <code>BETWEEN</code>, <code>LIKE</code>, <code>DISTINCT</code>, <code>IN</code>, or multi-condition <code>AND</code> / <code>OR</code></td>
+					<td>46</td>
+			</tr>
+			<tr>
+					<td><code>hard</code></td>
+					<td>Contains <code>JOIN</code>, subqueries (multiple <code>SELECT</code>), window functions (<code>OVER</code>, <code>WITHIN GROUP</code>, <code>FILTER</code>), <code>HAVING</code>, <code>EXTRACT</code>, <code>INTERVAL</code>, <code>CASE WHEN</code>, <code>UNION</code>, <code>STDDEV</code>, <code>CURRENT_DATE</code></td>
+					<td>24</td>
+			</tr>
+	</tbody>
+</table>
+
+<h3 class="relative group">2.3 Systems Under Test
+    <div id="23-systems-under-test" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#23-systems-under-test" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Three systems take part in the evaluation, all driven by the same prompt template:</p>
+<table>
+	<thead>
+			<tr>
+					<th>System</th>
+					<th>Role</th>
+					<th>Prompt</th>
+					<th>Retrieval</th>
+					<th>Output contract layer</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>direct</code></td>
+					<td>Bare-LLM baseline</td>
+					<td>same as harness</td>
+					<td>no</td>
+					<td>no</td>
+			</tr>
+			<tr>
+					<td><code>direct+rag</code></td>
+					<td>Retrieval-augmented baseline</td>
+					<td>same as harness</td>
+					<td>yes</td>
+					<td>no</td>
+			</tr>
+			<tr>
+					<td><code>harness</code></td>
+					<td>The NL2SQL Agent project, the main target</td>
+					<td>same as harness</td>
+					<td>yes</td>
+					<td>yes</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>All three share</strong> the same system prompt, the same schema injection, the same retrieval implementation, and the same generative model with the same decoding parameters. <strong>Each case makes exactly one model call.</strong> So only two independent variables remain between them:</p>
+<ul>
+<li><strong>Whether there is retrieval</strong> (<code>direct</code> vs <code>direct+rag</code>)</li>
+<li><strong>Whether there is an output contract layer</strong> (<code>direct+rag</code> vs <code>harness</code>)</li>
+</ul>
+
+<h4 class="relative group">2.3.1 Output Contract Layer
+    <div id="231-output-contract-layer" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#231-output-contract-layer" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>A post-processing chain unique to <code>harness</code>. Its starting point is <strong>distrust of the model&rsquo;s free text</strong>: it treats the reply as a string to be parsed and reduces it, with sentinels, regexes and a whitelist, into a <strong>binary outlet</strong> the evaluation can read (SQL present / SQL absent).</p>
+<table>
+	<thead>
+			<tr>
+					<th>#</th>
+					<th>Component</th>
+					<th>Purpose</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td>Three-way sentinel parsing</td>
+					<td>Splits on <code>SQL_QUERY:</code> / <code>请提供具体信息:</code> / <code>引导提问:</code> to decide which action the system chose</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>SQL extraction and normalization</td>
+					<td>Must contain <code>SQL_QUERY:</code>; strip markdown fences; cut at the first <code>;</code>; append <code>;</code></td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>SQL validation guardrail</td>
+					<td>Dangerous-keyword plus unknown-table check; on failure it returns an error message</td>
+			</tr>
+	</tbody>
+</table>
+<p>Note that here a SQL parse failure and a guardrail rejection are both marked as declining to answer in the later trials. That is indistinguishable, in the data, from the model itself declining because of insufficient information or an unreasonable request. This is why the quality axis and the behavior axis share the same outlet, and it is a precondition to keep in mind when attributing results in §3.3.3.</p>
+<p>Two changes relative to the product implementation: the follow-up check short-circuits to False when there is <strong>no conversation history</strong> (in a single-turn evaluation it neither affects the prompt nor produces that helper call); and the generation temperature is changed from the product&rsquo;s 0.7 to <strong>0.0</strong>, to align with the baselines (see §2.3.3).</p>
+
+<h4 class="relative group">2.3.2 Model Selection
+    <div id="232-model-selection" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#232-model-selection" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>The same three-system structure is run once on each of three generative models. Their structure and specs:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Label</th>
+					<th>Provider</th>
+					<th>Model name</th>
+					<th>Architecture</th>
+					<th>Activated / total params</th>
+					<th>Notes</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen-Coder</td>
+					<td>SiliconFlow</td>
+					<td><code>Qwen/Qwen3-Coder-30B-A3B-Instruct</code></td>
+					<td>MoE (128 experts, 8 activated, GQA)</td>
+					<td>3.3B / 30.5B</td>
+					<td>Code-specialized; 262K context</td>
+			</tr>
+			<tr>
+					<td>DS-V3</td>
+					<td>SiliconFlow</td>
+					<td><code>deepseek-ai/DeepSeek-V3</code></td>
+					<td>MoE (256 routed experts + 1 shared; MLA; MTP)</td>
+					<td>37B / 671B</td>
+					<td>General-purpose flagship; 128K context</td>
+			</tr>
+			<tr>
+					<td>DS-Flash</td>
+					<td>DeepSeek API</td>
+					<td><code>deepseek-flash</code> (DeepSeek-V4.1-Flash)</td>
+					<td>Causal-Encoder-Decoder MoE (asymmetric input/output)</td>
+					<td>8B input / 16B output / 552B</td>
+					<td>Lightweight general tier; natively multimodal; non-thinking mode in this article</td>
+			</tr>
+	</tbody>
+</table>
+<p>These three models cover three <strong>shapes</strong>: <strong>activation scale</strong> (3.3B activated vs 37B activated), <strong>domain bias</strong> (code-specialized vs general), and <strong>cost tier</strong> (light vs flagship).</p>
+<p>Note that <code>flash</code>&rsquo;s &ldquo;lightweight&rdquo; refers to its <strong>activation scale and cost tier</strong>, not its total parameters. Its Causal-Encoder-Decoder architecture pushes input-side activation down to 8B and output-side to 16B, and greatly compresses the KV Cache, so both unit price and cache cost are lower. All three accept the same set of decoding parameters (<code>temperature=0</code>, <code>max_tokens=4096</code>), and the DeepSeek endpoint has thinking mode turned off (§2.3.3).</p>
+
+  
+  
+  
+  
+
+
+
+<div
+  
+    class="flex px-4 py-3 rounded-md shadow bg-primary-100 dark:bg-primary-900"
+  
+  >
+  <span
+    
+      class="text-primary-400 pe-3 flex items-center"
+    
+    >
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S224 177.7 224 160C224 142.3 238.3 128 256 128zM296 384h-80C202.8 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h32c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg>
+</span>
+  </span>
+
+  <span
+    
+      class="dark:text-neutral-300"
+    
+    >Model spec sources: <code>Qwen3-Coder-30B-A3B</code> and <code>DeepSeek-V3</code> from their public model cards; <code>DeepSeek-V4.1-Flash</code> from the <a href="https://api-docs.deepseek.com/zh-cn/news/news260910/"  target="_blank" rel="noreferrer">official DeepSeek announcement</a> (2026-09-10).</span>
+</div>
+
+
+<h4 class="relative group">2.3.3 Other Controlled Variables
+    <div id="233-other-controlled-variables" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#233-other-controlled-variables" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<table>
+	<thead>
+			<tr>
+					<th>Variable</th>
+					<th>Value</th>
+					<th>How it is controlled</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>system prompt</td>
+					<td>Identical</td>
+					<td>Shared <code>render_prompt</code>, compared by a test assertion</td>
+			</tr>
+			<tr>
+					<td>schema injection</td>
+					<td>Identical</td>
+					<td><code>render_prompt</code> inlines <code>schema_info</code></td>
+			</tr>
+			<tr>
+					<td>Retrieval</td>
+					<td><code>direct</code> none; the other two share one function</td>
+					<td><code>direct+rag</code> calls the agent&rsquo;s own <code>retrieve_knowledge</code></td>
+			</tr>
+			<tr>
+					<td>Generative model</td>
+					<td>Same model within a run</td>
+					<td>Fixed by <code>--provider/--model</code>, written to the ledger</td>
+			</tr>
+			<tr>
+					<td><code>temperature</code></td>
+					<td><strong>0.0</strong></td>
+					<td><code>call_coder</code> and the baseline request read the same constants, so they cannot drift apart</td>
+			</tr>
+			<tr>
+					<td><code>max_tokens</code></td>
+					<td><strong>4096</strong></td>
+					<td>Identical for both, to avoid truncation from a lower cap</td>
+			</tr>
+			<tr>
+					<td>Thinking mode</td>
+					<td><strong>Off</strong></td>
+					<td><code>extra_body={&quot;thinking&quot;: {&quot;type&quot;: &quot;disabled&quot;}}</code> (only the DeepSeek endpoint has this switch)</td>
+			</tr>
+			<tr>
+					<td>Conversation history</td>
+					<td>Always empty</td>
+					<td>Single-turn evaluation</td>
+			</tr>
+			<tr>
+					<td>Database</td>
+					<td>Read-only role</td>
+					<td>A least-privilege connection from <code>EVAL_DATABASE_*</code></td>
+			</tr>
+	</tbody>
+</table>
+
+<h3 class="relative group">2.4 Metric Design
+    <div id="24-metric-design" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#24-metric-design" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Building on the first round of evaluation, the metric design is now split into 3 groups.</p>
+<p>One group is the metrics most common in the NL2SQL literature, used to score the quality of the SQL expression, the <strong>quality metrics</strong>. Another is the group this evaluation mainly tests, which scores the relationship between the system&rsquo;s behavior and the expected behavior, the <strong>behavior metrics</strong>. Besides those, there is a group of cost-related <strong>economic metrics</strong> covering response latency, tokens and LLM calls, used to judge whether using the NL2SQL Agent is economical.</p>
+
+<h4 class="relative group">2.4.1 Quality Metrics
+    <div id="241-quality-metrics" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#241-quality-metrics" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<table>
+	<thead>
+			<tr>
+					<th>Metric</th>
+					<th>Definition</th>
+					<th>Direction</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>valid_sql</code></td>
+					<td>SQL syntactic validity (whether it runs)</td>
+					<td>up</td>
+			</tr>
+			<tr>
+					<td><code>exact_match</code> (EM)</td>
+					<td>Exact match: the string equals the reference SQL</td>
+					<td>up</td>
+			</tr>
+			<tr>
+					<td><code>execution_match</code> (EX)</td>
+					<td>Execution match: after execution, the result set equals the reference result</td>
+					<td>up</td>
+			</tr>
+			<tr>
+					<td><code>schema_adherence</code></td>
+					<td>Data-model consistency: referenced tables and columns all exist in the database schema</td>
+					<td>up</td>
+			</tr>
+			<tr>
+					<td><code>EX@answered</code></td>
+					<td>Conditional execution match: EX computed only on cases the system <strong>actually answered</strong></td>
+					<td>up</td>
+			</tr>
+	</tbody>
+</table>
+<p>Besides the four conventional quality metrics, this round introduces <code>EX@answered</code> (Conditional EX). The reason is that only <strong>73</strong> of the 90 cases are truly answerable, while the other 17 expect a clarifying question or a refusal. So the EX computed directly over the answerable set (N=73) actually aggregates two independent abilities:</p>
+<ul>
+<li><strong>Willingness to answer</strong> (coverage)</li>
+<li><strong>Accuracy when answering</strong> (<code>EX@answered</code>)</li>
+</ul>
+<p>The three quantities EX, EX@answered and Coverage always satisfy:</p>
+\[ \mathrm{EX} = \mathrm{Coverage} \times \mathrm{EX@answered} \]<p>Note that \(\mathrm{EX} = \mathrm{EX@answered}\) holds if and only if \(\mathrm{Coverage} = 100\%\).</p>
+
+<h4 class="relative group">2.4.2 Behavior Metrics
+    <div id="242-behavior-metrics" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#242-behavior-metrics" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Because the system&rsquo;s <strong>clarifying questions</strong> and, conversely, its <strong>refusals to answer</strong> would be judged as wrong behavior and penalized by the quality metrics above, a separate set of metrics is needed to score the system&rsquo;s behavior. My approach here is to borrow from data science and statistics and reduce it to a standard <strong>binary classification</strong> problem: treat &ldquo;the system should answer&rdquo; as the <strong>positive class</strong>, so each case ends in one of only two behaviors:</p>
+<ol>
+<li>Answer (<code>answer</code>, 73 cases)</li>
+<li>Do not answer (<code>clarify</code> + <code>refuse</code>, 17 cases).</li>
+</ol>
+<p>That gives a standard 2×2 confusion matrix:</p>
+<table>
+	<thead>
+			<tr>
+					<th></th>
+					<th>Actual: answered</th>
+					<th>Actual: not answered</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Expected: answer</strong></td>
+					<td>TP</td>
+					<td>FN</td>
+			</tr>
+			<tr>
+					<td><strong>Expected: not answer</strong></td>
+					<td>FP</td>
+					<td>TN</td>
+			</tr>
+	</tbody>
+</table>
+<p>This is in fact a classic, standard binary-classification problem, so the metrics it yields are the usual statistical ones. This evaluation simply gives them domain names, so the derivations are omitted:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Domain name</th>
+					<th>Standard statistic</th>
+					<th>Formula</th>
+					<th>Denominator (conditional sample space)</th>
+					<th>Direction</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>presumption_rate</code></td>
+					<td>False positive rate <strong>FPR</strong></td>
+					<td>\( \dfrac{FP}{FP+TN} \)</td>
+					<td>17 (should not answer)</td>
+					<td>down</td>
+			</tr>
+			<tr>
+					<td><code>over_clarify_rate</code></td>
+					<td>False negative rate <strong>FNR</strong></td>
+					<td>\( \dfrac{FN}{FN+TP} \)</td>
+					<td>73 (should answer)</td>
+					<td>down</td>
+			</tr>
+			<tr>
+					<td><code>policy_accuracy</code></td>
+					<td><strong>Accuracy</strong></td>
+					<td>\( \dfrac{TP+TN}{N} \)</td>
+					<td>90 (all)</td>
+					<td>up</td>
+			</tr>
+			<tr>
+					<td><code>balanced_accuracy</code></td>
+					<td><strong>Balanced Accuracy</strong></td>
+					<td>\( \dfrac{\mathrm{TPR}+\mathrm{TNR}}{2} \)</td>
+					<td>90 (all)</td>
+					<td>up</td>
+			</tr>
+	</tbody>
+</table>
+<p>Specificity <strong>TNR</strong> \(= TN/(TN+FP) = 1-\mathrm{FPR}\) is the other side of the same coin as the presumption rate, so below it is recorded uniformly as &ldquo;not-answer recall&rdquo; and not listed as a separate metric.</p>
+<p>Note that <code>policy_accuracy</code> (Accuracy) can only be a reference, because it folds the dataset&rsquo;s <strong>class mix</strong> into the score: Accuracy is a weighted average of \(\mathrm{TPR}\) and \(\mathrm{TNR}\) with the <strong>class prior</strong> \(\pi = P(\text{should answer})\) as the weight, and \(\pi\) is set by the dataset, not by system ability. This article therefore also introduces <code>balanced_accuracy</code>, which averages the two class recalls with equal weight to remove that weighting. <strong>The derivation of this metric and its measured comparison on this data are in §3.3.2.</strong></p>
+
+<h4 class="relative group">2.4.3 Cost Metrics
+    <div id="243-cost-metrics" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#243-cost-metrics" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Cost has to answer two different questions, so it is split into two groups: <strong>economic cost</strong> decides &ldquo;is this system worth deploying&rdquo;, and <strong>experience cost</strong> decides &ldquo;can the user stand the wait&rdquo;. All are measured over the 90 cases:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Group</th>
+					<th>Metric</th>
+					<th>Meaning</th>
+					<th>Use</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Economic</td>
+					<td><strong>calls per case</strong></td>
+					<td>How many LLM requests each case makes on average</td>
+					<td>All three are 1 (the follow-up check short-circuits without conversation history, so it makes no call)</td>
+			</tr>
+			<tr>
+					<td>Economic</td>
+					<td><strong>tokens per case</strong></td>
+					<td>Total input + output tokens per case</td>
+					<td>Measures context size</td>
+			</tr>
+			<tr>
+					<td>Economic</td>
+					<td><strong>cached share</strong></td>
+					<td>Share of input tokens that hit the provider&rsquo;s prompt cache</td>
+					<td>Affects unit price: the cached part is billed at the cache price</td>
+			</tr>
+			<tr>
+					<td>Economic</td>
+					<td><strong>cost per 1k cases</strong></td>
+					<td>Spend per thousand cases, in CNY (= per-case cost × 1000)</td>
+					<td>Estimated from token counts × a dated price list, see below; this article reports costs in this unit throughout</td>
+			</tr>
+			<tr>
+					<td>Experience</td>
+					<td><strong>latency p50 / p95</strong></td>
+					<td>Median / 95th percentile of end-to-end response time</td>
+					<td>The wait the user actually feels</td>
+			</tr>
+	</tbody>
+</table>
+<p>Do not conflate the two. In the measurements their <strong>drivers are almost orthogonal</strong>: tripling the input tokens raises p50 by only 0.05–0.18 s, while switching model or provider tier is a factor of 3.8 (§3.4).</p>
+<p>The per-case cost is computed as</p>
+\[ \mathrm{Cost} = \frac{(\text{prompt} - \text{cached}) \cdot p_{in} \;+\; \text{cached} \cdot p_{cache} \;+\; \text{completion} \cdot p_{out}}{10^{6}} \]<p>where \(p_{in}, p_{cache}, p_{out}\) are the unit prices for input / cached input / output (CNY per 1M tokens), recorded in <code>app/eval/pricing.py</code> with sources and dates (SiliconFlow 2026-09; DeepSeek official 2026-10).</p>
+
+  
+  
+  
+  
+
+
+
+<div
+  
+    class="flex px-4 py-3 rounded-md shadow bg-primary-100 dark:bg-primary-900"
+  
+  >
+  <span
+    
+      class="text-primary-400 pe-3 flex items-center"
+    
+    >
+    <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S224 177.7 224 160C224 142.3 238.3 128 256 128zM296 384h-80C202.8 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h32c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg>
+</span>
+  </span>
+
+  <span
+    
+      class="dark:text-neutral-300"
+    
+    ><p><strong>Price is an external variable.</strong> A cost figure holds only for this dated price list; latency and call counts are not part of <strong>economic cost</strong>.</p>
+<p>The <a href="https://api-docs.deepseek.com/zh-cn/quick_start/pricing"  target="_blank" rel="noreferrer">DeepSeek API price</a> also <strong>fluctuates by time of day</strong> (Beijing time, weekdays 09:00–12:00 and 14:00–18:00 are peak; other hours, weekends and holidays are <strong>half price</strong>). The price list takes the <strong>peak</strong> price, so the DeepSeek cost figures are an <strong>upper bound</strong>, not a lower bound.</p>
+</span>
+</div>
+
+
+<h2 class="relative group">3. Results
+    <div id="3-results" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#3-results" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+
+<h3 class="relative group">3.1 Overall Table
+    <div id="31-overall-table" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#31-overall-table" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The table below is all nine cells (the 3 × 3 model-by-system combinations); the denominator for <code>Coverage</code> is the 73 answerable cases. <strong>Cost and latency are not on this axis</strong>, they form their own group (§3.4). The per-metric breakdown is in §3.2–§3.4.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Model</th>
+					<th>System</th>
+					<th>EX</th>
+					<th>EX@answered</th>
+					<th>Coverage</th>
+					<th><code>valid_sql</code></th>
+					<th>presumption rate down</th>
+					<th>over-clarify rate down</th>
+					<th>policy accuracy</th>
+					<th>balanced accuracy</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen3-Coder</td>
+					<td><code>direct</code></td>
+					<td>6.9%</td>
+					<td>20.8%</td>
+					<td>32.9%</td>
+					<td>26.0%</td>
+					<td>17.6%</td>
+					<td>67.1%</td>
+					<td>42.2%</td>
+					<td>57.6%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>direct+rag</code></td>
+					<td>43.8%</td>
+					<td>48.5%</td>
+					<td>90.4%</td>
+					<td>76.7%</td>
+					<td>11.8%</td>
+					<td>9.6%</td>
+					<td>90.0%</td>
+					<td>89.3%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>harness</code></td>
+					<td><strong>54.8%</strong></td>
+					<td>59.7%</td>
+					<td>91.8%</td>
+					<td>90.4%</td>
+					<td>11.8%</td>
+					<td>8.2%</td>
+					<td>91.1%</td>
+					<td>90.0%</td>
+			</tr>
+			<tr>
+					<td>DeepSeek-V3</td>
+					<td><code>direct</code></td>
+					<td>9.6%</td>
+					<td>58.3%</td>
+					<td>16.4%</td>
+					<td>16.4%</td>
+					<td><strong>5.9%</strong></td>
+					<td><strong>83.6%</strong></td>
+					<td>31.1%</td>
+					<td>55.3%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>direct+rag</code></td>
+					<td>53.4%</td>
+					<td>62.9%</td>
+					<td>84.9%</td>
+					<td>79.5%</td>
+					<td>5.9%</td>
+					<td>15.1%</td>
+					<td>86.7%</td>
+					<td>89.5%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>harness</code></td>
+					<td>56.2%</td>
+					<td><strong>67.2%</strong></td>
+					<td>83.6%</td>
+					<td>83.6%</td>
+					<td>17.6%</td>
+					<td>16.4%</td>
+					<td>83.3%</td>
+					<td>83.0%</td>
+			</tr>
+			<tr>
+					<td>deepseek-flash</td>
+					<td><code>direct</code></td>
+					<td>32.9%</td>
+					<td>32.9%</td>
+					<td>100.0%</td>
+					<td>97.3%</td>
+					<td><strong>100.0%</strong></td>
+					<td>0.0%</td>
+					<td>81.1%</td>
+					<td>50.0%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>direct+rag</code></td>
+					<td>54.8%</td>
+					<td>54.8%</td>
+					<td>100.0%</td>
+					<td>89.0%</td>
+					<td>41.2%</td>
+					<td>0.0%</td>
+					<td>92.2%</td>
+					<td>79.4%</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td><code>harness</code></td>
+					<td>54.8%</td>
+					<td>55.6%</td>
+					<td>98.6%</td>
+					<td>87.7%</td>
+					<td>29.4%</td>
+					<td>1.4%</td>
+					<td><strong>93.3%</strong></td>
+					<td>84.6%</td>
+			</tr>
+	</tbody>
+</table>
+<p>The relationship between the three systems forms a chain:</p>
+<div class="highlight-wrapper"><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">direct  ──add retrieval──▶  direct+rag  ──add output contract layer──▶  harness</span></span></code></pre></div></div>
+
+<h4 class="relative group">3.1.1 Reading Preconditions
+    <div id="311-reading-preconditions" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#311-reading-preconditions" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Measured drift from repeated runs of the same configuration:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Model · System</th>
+					<th>EX, first pass</th>
+					<th>EX, second pass</th>
+					<th>Δ EX</th>
+					<th>Δ balanced accuracy</th>
+					<th>Δ policy accuracy</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen · <code>direct</code></td>
+					<td>9.6%</td>
+					<td>6.9%</td>
+					<td>−2.7</td>
+					<td>+5.2</td>
+					<td>+1.1</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>direct+rag</code></td>
+					<td>48.0%</td>
+					<td>43.8%</td>
+					<td>−4.1</td>
+					<td>+2.3</td>
+					<td>0.0</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct</code></td>
+					<td>9.6%</td>
+					<td>11.0%</td>
+					<td>+1.4</td>
+					<td>−0.2</td>
+					<td>+3.3</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct+rag</code></td>
+					<td>53.4%</td>
+					<td>49.3%</td>
+					<td>−4.1</td>
+					<td>−2.9</td>
+					<td>−1.1</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>harness</code></td>
+					<td>56.2%</td>
+					<td>54.8%</td>
+					<td>−1.4</td>
+					<td>+1.5</td>
+					<td>−1.1</td>
+			</tr>
+	</tbody>
+</table>
+<p>With the same configuration, the same prompt and <code>temperature=0</code>, the metrics still drift. The reason is that one component (TNR) has a denominator of only 17, so a single case is 5.9%. This is not a flaw in the experiment; it is <strong>the default property of any single-run LLM evaluation</strong>: <code>temperature=0</code> is only &ldquo;greedy decoding&rdquo;, and server-side MoE expert routing and continuous batching still introduce jitter.</p>
+<p>So <strong>differences below roughly 5 percentage points should not be interpreted</strong>. This is the reading precondition for every conclusion in this article.</p>
+
+<h4 class="relative group">3.1.2 Net Effect of the Contract Layer
+    <div id="312-net-effect-of-the-contract-layer" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#312-net-effect-of-the-contract-layer" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>From <code>direct+rag</code> to <code>harness</code>, the only architectural variable that is added is the output-contract-layer processing. And the output contract layer leaves a trace in only these three places, all far smaller in magnitude than retrieval:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Model</th>
+					<th>ΔEX</th>
+					<th>Δ<code>valid_sql</code></th>
+					<th>Δ balanced accuracy</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen</td>
+					<td><strong>+11.0</strong> (43.8 → 54.8)</td>
+					<td>+13.7 (76.7 → 90.4)</td>
+					<td>+0.7 (89.3 → 90.0)</td>
+			</tr>
+			<tr>
+					<td>V3</td>
+					<td>+2.8 (53.4 → 56.2)</td>
+					<td>+4.1 (79.5 → 83.6)</td>
+					<td>−6.5 (89.5 → 83.0)</td>
+			</tr>
+			<tr>
+					<td>flash</td>
+					<td>0.0 (54.8 → 54.8)</td>
+					<td>−1.3 (89.0 → 87.7)</td>
+					<td>+5.2 (79.4 → 84.6)</td>
+			</tr>
+	</tbody>
+</table>
+<p>From the differences of each metric between <code>direct+rag</code> and <code>harness</code>:</p>
+<p><strong>The contract layer&rsquo;s gain has very few detectable points.</strong> Only under the Qwen model does the system change reach a gain of +11.0. This is because the contract layer essentially <strong>solves an output-hygiene problem</strong>: Qwen goes from 10 broken cases to 1, V3 from 4 to 0, and flash&rsquo;s 8 cases stay at 8. Whether it can be fixed depends on how hygienic the model&rsquo;s output is, which is exactly why its EX increment is detectable only under Qwen. On cost, this layer costs nothing at all; it is a purely software-side post-processing step.</p>
+
+<h3 class="relative group">3.2 Quality Metrics
+    <div id="32-quality-metrics" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#32-quality-metrics" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+
+<h4 class="relative group">3.2.1 EX
+    <div id="321-ex" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#321-ex" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Execution match EX: three models × three systems"
+    src="/reports/nl2sql-eval/en/fig1-ex.png?v=2"
+    ></figure>
+<p>Using the three components from §2.4.1, each EX cell can be decomposed (\(n_A\) is the number of answered cases among the 73 answerable, \(c\) the number of those with a correct result set; it always holds that \(\mathrm{EX} = \mathrm{Coverage} \times \mathrm{EX@answered}\)):</p>
+<table>
+	<thead>
+			<tr>
+					<th>Model · System</th>
+					<th>\(n_A\)</th>
+					<th>\(c\)</th>
+					<th>\(\mathrm{EX}=c/73\)</th>
+					<th>\(\mathrm{EX@answered}=c/n_A\)</th>
+					<th>\(\mathrm{Coverage}=n_A/73\)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen · <code>direct</code></td>
+					<td>24</td>
+					<td>5</td>
+					<td>6.9%</td>
+					<td>20.8%</td>
+					<td>32.9%</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>direct+rag</code></td>
+					<td>66</td>
+					<td>32</td>
+					<td>43.8%</td>
+					<td>48.5%</td>
+					<td>90.4%</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>harness</code></td>
+					<td>67</td>
+					<td>40</td>
+					<td>54.8%</td>
+					<td>59.7%</td>
+					<td>91.8%</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct</code></td>
+					<td>12</td>
+					<td>7</td>
+					<td>9.6%</td>
+					<td>58.3%</td>
+					<td>16.4%</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct+rag</code></td>
+					<td>62</td>
+					<td>39</td>
+					<td>53.4%</td>
+					<td>62.9%</td>
+					<td>84.9%</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>harness</code></td>
+					<td>61</td>
+					<td>41</td>
+					<td>56.2%</td>
+					<td>67.2%</td>
+					<td>83.6%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct</code></td>
+					<td>73</td>
+					<td>24</td>
+					<td>32.9%</td>
+					<td>32.9%</td>
+					<td>100.0%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct+rag</code></td>
+					<td>73</td>
+					<td>40</td>
+					<td>54.8%</td>
+					<td>54.8%</td>
+					<td>100.0%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>harness</code></td>
+					<td>72</td>
+					<td>40</td>
+					<td>54.8%</td>
+					<td>55.6%</td>
+					<td>98.6%</td>
+			</tr>
+	</tbody>
+</table>
+<p>From the table above:</p>
+<ol>
+<li><strong>Retrieval is the largest single gain</strong>: with the same model and the same prompt, adding RAG alone raises EX substantially.</li>
+<li><strong>But the way each model degrades without retrieval is different</strong>:
+<ul>
+<li>Qwen <strong>guesses but guesses wrong</strong> (answers only 24 cases, <code>EX@answered</code> just 20.8%);</li>
+<li>V3 <strong>answers conservatively</strong> (answers only 12 cases, yet <code>EX@answered</code> is 58.3%);</li>
+<li>flash <strong>answers everything with full confidence, blindly</strong> (all 73 answerable cases answered, and all 17 unanswerable cases also turned into SQL).</li>
+</ul>
+</li>
+</ol>
+
+<h4 class="relative group">3.2.2 Executability
+    <div id="322-executability" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#322-executability" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>The denominator of <code>valid_sql</code> is the 73 answerable cases, so it reads as &ldquo;how many cases produced SQL that runs&rdquo;. Here, using the same approach as <code>EX@answered</code>, we split out conditional valid SQL: </p>
+\[P(\text{executable} \mid \text{answered})\]<p>Like EX, <code>valid_sql</code> decomposes into two independent factors:</p>
+\[ \mathrm{valid\_sql} = \mathrm{Coverage} \times P(\text{executable} \mid \text{answered}) \]<table>
+	<thead>
+			<tr>
+					<th>Model · System</th>
+					<th>answered /73</th>
+					<th>executable /73</th>
+					<th><code>valid_sql</code></th>
+					<th>answered but won&rsquo;t run</th>
+					<th>executable given answered</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen · <code>direct</code></td>
+					<td>24</td>
+					<td>19</td>
+					<td>26.0%</td>
+					<td>5</td>
+					<td>79.2%</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>direct+rag</code></td>
+					<td>66</td>
+					<td>56</td>
+					<td>76.7%</td>
+					<td>10</td>
+					<td>84.8%</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>harness</code></td>
+					<td>67</td>
+					<td>66</td>
+					<td><strong>90.4%</strong></td>
+					<td><strong>1</strong></td>
+					<td><strong>98.5%</strong></td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct</code></td>
+					<td>12</td>
+					<td>12</td>
+					<td>16.4%</td>
+					<td>0</td>
+					<td>100.0%</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct+rag</code></td>
+					<td>62</td>
+					<td>58</td>
+					<td>79.5%</td>
+					<td>4</td>
+					<td>93.5%</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>harness</code></td>
+					<td>61</td>
+					<td>61</td>
+					<td>83.6%</td>
+					<td>0</td>
+					<td>100.0%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct</code></td>
+					<td>73</td>
+					<td>71</td>
+					<td>97.3%</td>
+					<td>2</td>
+					<td>97.3%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct+rag</code></td>
+					<td>73</td>
+					<td>65</td>
+					<td>89.0%</td>
+					<td>8</td>
+					<td>89.0%</td>
+			</tr>
+			<tr>
+					<td>flash · <code>harness</code></td>
+					<td>72</td>
+					<td>64</td>
+					<td>87.7%</td>
+					<td>8</td>
+					<td>88.9%</td>
+			</tr>
+	</tbody>
+</table>
+<p>After this further decomposition of <code>valid_sql</code>, we can answer &ldquo;among the generated SQL that runs, how good is the SQL?&rdquo;. The table shows that <strong>adding RAG makes the model more willing to answer, but does not improve the quality of the SQL expression</strong>. Coverage goes 16.4% → 32.9% → 100.0% up to 84.9% → 90.4% → 100.0%; but V3 and flash&rsquo;s P(executable | answered) actually regress, and Qwen is the only one that rises.
+Looking at the run logs, the failures fall into two kinds: <code>SyntaxError</code>, and calls to functions that do not exist in the database (<code>UndefinedFunction</code>). The two are different in nature:</p>
+<ul>
+<li><strong>Qwen&rsquo;s syntax errors are almost all markdown fence leakage.</strong> It wraps the SQL in <code>```</code> and outputs it, so Postgres reports <code>syntax error at or near &quot;```&quot;</code>. This is not wrong SQL, it is an <strong>output hygiene</strong> problem; <code>harness</code>&rsquo;s contract layer strips the fences, which is exactly why it fixes those 10 cases down to 1 (§3.1.2). But narrowing the scope to <strong>executable</strong> SQL, Qwen is still the worst on <code>hard</code> (3/13), so its gap is &ldquo;<strong>output hygiene + genuinely wrong SQL</strong>&rdquo; stacked together.</li>
+<li><strong>flash&rsquo;s failures are all missing functions.</strong> Once retrieval injects the schema and the metric descriptions, flash starts writing more complex aggregations, but calls functions that do not exist in the database.</li>
+</ul>
+
+<h3 class="relative group">3.3 Behavior Metrics
+    <div id="33-behavior-metrics" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#33-behavior-metrics" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In the dimensions below we only look at whether the system chose <strong>answer</strong> or <strong>abstain</strong> on each question, which is unrelated to whether the SQL was accurate. A system can output a correct SQL expression and still be guessing on every answer.</p>
+
+<h4 class="relative group">3.3.1 Presumption Rate and Over-Clarify Rate
+    <div id="331-presumption-rate-and-over-clarify-rate" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#331-presumption-rate-and-over-clarify-rate" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="The two error rates on the behavior axis"
+    src="/reports/nl2sql-eval/en/fig4-behavior-bars.png?v=2"
+    ></figure>
+<p>The left side of the figure is the <strong>presumption rate</strong> (of the 17 cases that should be declined, how many were answered), and the right side is the <strong>over-clarify rate</strong> (of the 73 cases that should be answered, how many were questioned). The dashed line represents the &ldquo;judge nothing&rdquo; extreme: answer everything gives a presumption rate of 100%, decline everything gives an over-clarify rate of 100%.</p>
+<p>Looking at the left side alone, qwen3-coder and v3 both do well (17.6% &amp; 5.9%), meaning they do not rush to output SQL on unclear questions. But <strong>the price of their low presumption rate is the highest over-clarify rate in the table (67.1% &amp; 83.6%)</strong>. By contrast, flash sits at the other extreme: an extremely low over-clarify rate (close to 0 in all three systems), at the price of the highest presumption rate in the table.</p>
+<p>From the system&rsquo;s point of view, adding retrieval clearly helps. Which side it improves depends on which extreme the model was stuck at: Qwen and V3 were stuck at &ldquo;over-clarify&rdquo;, so retrieval mainly improves that side (Qwen from 67.1% → 9.6%, V3 from 83.6% → 15.1%); flash&rsquo;s over-clarify rate was already 0%, so retrieval improves its presumption rate instead (100.0% → 41.2%).</p>
+<p>Because the presumption rate and the over-clarify rate are driven by the same &ldquo;should I answer&rdquo; threshold, the scatter plot below shows each system under each model more directly:</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Behavior axis: presumption rate × over-clarify rate"
+    src="/reports/nl2sql-eval/en/fig4-behavior-plane.png?v=2"
+    ></figure>
+<p>In this plot the x-axis is the presumption rate and the y-axis the over-clarify rate. The ideal outcome is a system with <strong>complete question recognition and correct behavior decisions</strong>, i.e. the <strong>origin at the bottom left</strong> (the ideal point). The worst case is a system with no ability to tell questions apart, which lands on the dashed line in the figure (the zero-ability line). flash <code>direct</code> is the measured sample of exactly that: all 17 unanswerable cases were turned into SQL (presumption rate 100.0%), while not one was questioned (0.0%), so behaviorally it is fully equivalent to &ldquo;always answer&rdquo;, a zero-ability classifier. From these 3 scatter plots, retrieval&rsquo;s (RAG&rsquo;s) improvement to system ability is more visible: whichever model a system uses, the <code>direct+rag</code> system is closer to the origin.</p>
+
+<h4 class="relative group">3.3.2 Balanced Accuracy
+    <div id="332-balanced-accuracy" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#332-balanced-accuracy" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Now let us look at the three systems&rsquo; output from the angle of policy accuracy. Because the TP and TN samples in these test cases are not balanced, this article also introduces <code>balanced_accuracy</code>, which averages the two class recalls with equal weight. (See §2.4.2 for the behavior metrics.)</p>
+<p>A concrete comparison shows why balanced accuracy is the better metric to read. Under the flash model, the <code>direct</code> system&rsquo;s policy accuracy is <strong>81.1%</strong> (exactly the majority-class share, 73/90), while its balanced accuracy is <strong>50.0%</strong>. Reading only policy accuracy, one would think the system&rsquo;s behavior decisions were decent; reading balanced accuracy, one sees that the system&rsquo;s behavior ability is 0 (see the figure).</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Balanced accuracy: three models × three systems"
+    src="/reports/nl2sql-eval/en/fig2-balanced-accuracy.png?v=2"
+    ></figure>
+<p>The figure is the balanced accuracy after averaging the two class recalls with <strong>equal weight</strong>; the dashed line is the zero-ability line. Landing on the line means <strong>the system&rsquo;s behavior decisions are no better than random guessing</strong>.</p>
+<p>The figure shows that all three systems&rsquo; <code>direct</code> stops near the zero-ability line, within 8% of each other, and the gap between neighbors is less than a single case on the TNR side (1/17 = 5.9%), so all that can be read here is &ldquo;<strong>none of them has behavior-decision ability</strong>&rdquo;.</p>
+<p>After adding retrieval, the three systems&rsquo; behavior-decision ability rises to 79.4%, 89.3% and 89.5% respectively, about a 30% improvement over each system&rsquo;s own <code>direct</code>. The mechanism makes sense: without retrieval, the model cannot tell &ldquo;whether this metric name exists, whether the question has a unique solution&rdquo;, so it can only guess; retrieval turns &ldquo;should I decline&rdquo; from a guess into something judgeable.</p>
+<p>Combining balanced accuracy with the presumption rate and over-clarify rate above, we can see that <strong>adding retrieval can substantially raise a system&rsquo;s behavior-decision level</strong>.</p>
+
+<h4 class="relative group">3.3.3 Abstention Behavior
+    <div id="333-abstention-behavior" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#333-abstention-behavior" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>In this experiment there are 90 test cases in total, split by expected behavior into three kinds (§2.2.1): <strong>73 that should be answered</strong>, <strong>14 that should be refused</strong> (<code>refuse</code>, asking about metrics that do not exist in the database) and <strong>3 that should be clarified</strong> (<code>clarify</code>, the question itself being ambiguous). What this subsection calls &ldquo;abstention&rdquo; refers to the <strong>17</strong> test cases where the system should not output SQL.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Abstention ability: how many of refuse and clarify are answered correctly"
+    src="/reports/nl2sql-eval/en/fig3-abstention.png?v=4"
+    ></figure>
+<p>The figure shows abstention behavior in detail: <strong>the x-axis is the three models, and in each group the three bars from left to right are <code>direct</code>, <code>direct+rag</code>, <code>harness</code></strong>; the left panel is the 14 <code>refuse</code> cases and the right panel the 3 <code>clarify</code> cases; the closer to the dashed line, the more the behavior matches the expectation.</p>
+<p>Looking at the detailed output logs, although both expected behaviors are classed as abstention, they are essentially different abilities, provided by two different things:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Ability</th>
+					<th>Missing</th>
+					<th>Provided by</th>
+					<th>In practice</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>refuse</code></td>
+					<td>Which metrics actually exist in the database</td>
+					<td>Business text in the knowledge base</td>
+					<td>Rises sharply once <strong>retrieval</strong> is added, and by <code>harness</code> all three are level at <strong>12/14</strong> (<code>flash</code> starts from 0: <strong>0 → 10 → 12</strong>)</td>
+			</tr>
+			<tr>
+					<td><code>clarify</code></td>
+					<td>The user&rsquo;s real intent</td>
+					<td>The user&rsquo;s reply in multi-turn interaction</td>
+					<td>flash is 0/3 throughout, while Qwen is 3/3 throughout</td>
+			</tr>
+	</tbody>
+</table>
+<p>Going back to the logs and querying the detailed output, we can see that on the negative test cases, qwen and V3 both managed to ask clarifying questions, for example:</p>
+<blockquote><p><strong>Qwen</strong> (case 55): 请提供具体信息: 您希望查询哪一天的数据？或者您是否有特定的指标名称（index_name）和指标类别（index_category）？</p>
+<p>(Ask for specific information: which day&rsquo;s data would you like to query, or do you have a particular metric name (<code>index_name</code>) and metric category (<code>index_category</code>)?)</p>
+<p><strong>V3</strong> (case 60): 引导提问: 请问您想查询哪个具体的指标名称(index_name)？因为表中有多个指标类别(index_category)和指标名称(index_name)，需要明确要对比的具体指标。</p>
+<p>(A guiding question: which specific metric name (<code>index_name</code>) would you like to query? The table has several metric categories (<code>index_category</code>) and metric names (<code>index_name</code>), so the specific metric to compare needs to be specified.)</p>
+</blockquote><p>By contrast, flash indiscriminately produced hypothetical SQL output for all 90 questions, for instance defaulting a missing range to the whole table (<code>把缺失的范围默认成&quot;整表&quot;</code>) or a missing time to a concrete time slice (<code>把缺失的时间默认成具体的时间切片</code>). This is very close to flash&rsquo;s failure mode in §3.2.2.</p>
+
+<h3 class="relative group">3.4 Cost
+    <div id="34-cost" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#34-cost" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Cost metrics are split into two groups here: <strong>economic cost</strong> (how much each case costs) and <strong>experience cost</strong> (how long each case takes).</p>
+
+<h4 class="relative group">3.4.1 Economic Cost
+    <div id="341-economic-cost" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#341-economic-cost" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<p>Start with the detailed table, where:</p>
+<ul>
+<li><strong>input tokens</strong> = system prompt + schema injection + retrieved knowledge + user question;</li>
+<li><strong>output tokens</strong> = the SQL or clarifying text the model actually generated this time;</li>
+<li><strong>cached share</strong> = the share of input that hit the provider&rsquo;s prompt cache (the cached part is billed at the lower cache price).</li>
+</ul>
+<table>
+	<thead>
+			<tr>
+					<th>Model · System</th>
+					<th>calls / case</th>
+					<th>input tokens / case</th>
+					<th>output tokens / case</th>
+					<th>total</th>
+					<th>cached share</th>
+					<th><strong>CNY / 1k cases</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Qwen · <code>direct</code></td>
+					<td>1.0</td>
+					<td>438</td>
+					<td>54</td>
+					<td>492</td>
+					<td>94.0%</td>
+					<td>0.46</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>direct+rag</code></td>
+					<td>1.0</td>
+					<td>1,509</td>
+					<td>48</td>
+					<td>1,557</td>
+					<td>84.0%</td>
+					<td>1.19</td>
+			</tr>
+			<tr>
+					<td>Qwen · <code>harness</code></td>
+					<td>1.0</td>
+					<td>1,509</td>
+					<td>48</td>
+					<td>1,557</td>
+					<td>96.0%</td>
+					<td>1.19</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct</code></td>
+					<td>1.0</td>
+					<td>425</td>
+					<td>52</td>
+					<td>476</td>
+					<td><strong>0.0%</strong></td>
+					<td>1.26</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>direct+rag</code></td>
+					<td>1.0</td>
+					<td>1,404</td>
+					<td>65</td>
+					<td>1,470</td>
+					<td><strong>0.0%</strong></td>
+					<td>3.33</td>
+			</tr>
+			<tr>
+					<td>V3 · <code>harness</code></td>
+					<td>1.0</td>
+					<td>1,404</td>
+					<td>66</td>
+					<td>1,470</td>
+					<td><strong>0.0%</strong></td>
+					<td>3.34</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct</code></td>
+					<td>1.0</td>
+					<td>427</td>
+					<td>52</td>
+					<td>479</td>
+					<td>60.0%</td>
+					<td>0.77</td>
+			</tr>
+			<tr>
+					<td>flash · <code>direct+rag</code></td>
+					<td>1.0</td>
+					<td>1,406</td>
+					<td>62</td>
+					<td>1,469</td>
+					<td>74.0%</td>
+					<td>1.28</td>
+			</tr>
+			<tr>
+					<td>flash · <code>harness</code></td>
+					<td>1.0</td>
+					<td>1,406</td>
+					<td>65</td>
+					<td>1,471</td>
+					<td>84.0%</td>
+					<td>1.02</td>
+			</tr>
+	</tbody>
+</table>
+<p>For readability, costs below are reported uniformly in CNY per 1k cases.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Economic cost (CNY / 1k cases): three models × three systems"
+    src="/reports/nl2sql-eval/en/fig5-cost.png?v=2"
+    ></figure>
+<p>The figure shows that, because each system runs <strong>only a single turn</strong> in this test, <code>harness</code> and <code>direct+rag</code> cost almost the same per 1k cases. The main reason is that the output contract layer is a purely software-side change and produces no tokens. <strong>Adding retrieval greatly increases the input</strong>, which is what drives cost up. Beyond that, the remaining cost differences come mainly from the provider. For example, V3 on SiliconFlow has a 0% cache hit rate, so all its input is billed at full price. And flash, because caching works, is actually cheaper than V3.</p>
+<p>In summary, the most expensive of the three is the <code>harness</code> system on V3, at CNY 3.34 per 1k cases. At ten thousand calls a day, that is roughly CNY 33/day; switching to the Qwen model at the same volume costs about CNY 12/day.</p>
+
+<h4 class="relative group">3.4.2 Experience Cost
+    <div id="342-experience-cost" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#342-experience-cost" aria-label="Anchor">#</a>
+    </span>
+    
+</h4>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Experience cost: latency p50 (solid) and p95 (hollow)"
+    src="/reports/nl2sql-eval/en/fig6-latency.png?v=3"
+    ></figure>
+<p>The figure shows directly that latency is set almost entirely by the <strong>model or provider, and is unrelated to input length</strong>. The clearest evidence is that after adding retrieval, none of the three models&rsquo; latency changed noticeably. What is worth noting is that flash&rsquo;s latency is the smallest of the three, only a quarter of V3&rsquo;s.</p>
+<p>Putting the two together: <strong>adding retrieval &ldquo;costs a little money and almost no experience&rdquo;, while the model or model provider is the main source of economic-cost differences.</strong></p>
+
+<h2 class="relative group">4. Conclusion
+    <div id="4-conclusion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#4-conclusion" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+
+<h3 class="relative group">4.1 Conclusion
+    <div id="41-conclusion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#41-conclusion" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Putting the three metric groups of §2.4 together, the conclusions are as follows.</p>
+<p><strong>On the quality dimension, retrieval is the only order-of-magnitude gain</strong>: with the same model and the same prompt, adding retrieval alone lifts EX from 6.9%/9.6%/32.9% to 43.8%/53.4%/54.8%. And the output contract layer in the architecture is only text processing on the final output; its gain shrinks as the system&rsquo;s own executability rises, for instance the EX increment on <code>direct+rag</code> shrinks from Qwen&rsquo;s +11.0 to V3&rsquo;s +2.8, then to flash&rsquo;s 0.0.</p>
+<p><strong>On the behavior dimension, retrieval is just as important.</strong> It lifts behavior decisions from the zero-ability line to 79.4% to 89.5% balanced accuracy, and fills in the <code>refuse</code> class of tasks to 12/14. But it must still be made clear that <code>clarify</code> and <code>refuse</code> are two abilities: the former is decided by the model throughout (Qwen 3/3, flash 0/3), while only the latter is a retrieval gain (§3.3.3).</p>
+<p><strong>On the cost dimension, retrieval can be called cheap and nearly free in experience.</strong> Input tokens rise to about 3.4×, but cost per 1k cases stays within CNY 3.34, and latency barely changes. The cost differences are mainly set by the provider&rsquo;s unit price and caching policy, unrelated to the three systems under test.</p>
+<p>In short, <strong>in single-turn conversation, the NL2SQL Agent architecture&rsquo;s value is carried mainly by retrieval and the prompt</strong>. The part of its architecture that handles multi-turn interaction, information integration and output was not in scope this time, so extrapolation should be cautious (see §4.3).</p>
+<p>The reason <strong>retrieval</strong>&rsquo;s gain in single-turn generation is so pronounced is that <strong>it is essentially data processing</strong>, only over &ldquo;text&rdquo; rather than the tabular data (tabular data) that traditional data analysis is used to. Bringing these unstructured / semi-structured data, the database schema, metric definitions and business rules, through business analysis, text distillation and retrieval on demand, and finally feeding them to the model, this whole flow is itself another data pipeline. So the value of this NL2SQL Agent in single-turn conversation can be said to come almost entirely from <code>text data engineering</code>.</p>
+
+<h3 class="relative group">4.2 How Model Selection Affects the Results
+    <div id="42-how-model-selection-affects-the-results" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#42-how-model-selection-affects-the-results" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In §2.3.2 I explained this selection, which was meant to cover three possible influencing factors: activation scale, domain bias and cost tier. After the experiment we can see that these three axes affect the results to different degrees.</p>
+<ol>
+<li><strong>Activation scale affects SQL quality, but the difference is only between Qwen and the other two.</strong> Splitting the 73 answerable cases by difficulty:</li>
+</ol>
+<table>
+	<thead>
+			<tr>
+					<th></th>
+					<th>Qwen</th>
+					<th>flash</th>
+					<th>V3</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>output-side activated params</td>
+					<td>3.3B</td>
+					<td>16B (output side)</td>
+					<td>37B</td>
+			</tr>
+			<tr>
+					<td><code>medium</code> EX</td>
+					<td>57%</td>
+					<td>67%</td>
+					<td>65%</td>
+			</tr>
+			<tr>
+					<td><code>hard</code> EX</td>
+					<td>12%</td>
+					<td>25%</td>
+					<td>25%</td>
+			</tr>
+	</tbody>
+</table>
+<p>Qwen lags systematically on both <code>medium</code> and <code>hard</code> (9~13pp, beyond §3.1.1&rsquo;s jitter band), while V3 and flash show no measurable difference. So the real parameter step is: the 3.3B tier versus anything above ten-odd B; further up (16B → 37B) there is no extra gain. Also, Qwen is a code-specialized model yet is the worst on <code>hard</code>, which suggests the real bottleneck on <code>hard</code> cases may be schema understanding and assembling multiple clauses, not whether the model can write code.</p>
+<ol start="2">
+<li>
+<p><strong>The abstention-behavior differences are rooted in each model&rsquo;s own training and decoding, not in architecture.</strong> All three models are MoE, using the same prompt and retrieval, yet their abstention decisions are completely different:</p>
+<ul>
+<li><strong>Decoding mode</strong>: this time flash&rsquo;s thinking mode was turned off, so it guesses directly on ambiguity; on <code>direct</code> it <strong>outputs 90/90 SQL statements</strong>, sending its behavior straight back to the zero-ability line. This was verified separately in the project: with the same flash, simply turning thinking on drops <code>direct+rag</code>&rsquo;s presumption rate from 41.2% to 17.6% and <code>harness</code>&rsquo;s from 29.4% to 11.8%.</li>
+<li><strong>Post-training</strong>: &ldquo;whether to ask&rdquo; is closer to a behavior preference shaped by post-training; DeepSeek&rsquo;s official documentation also states that flash went through larger-scale reinforcement-learning post-training. Still, even with thinking on, flash&rsquo;s refuse on <code>direct</code> is still 0/14, so the decoding mode is only one reason.</li>
+</ul>
+</li>
+<li>
+<p><strong>Cost has nothing to do with model ability, only with the provider tier.</strong> When each case runs a single turn, the price differences come almost entirely from the provider&rsquo;s unit price and caching policy, not from the systems under test.</p>
+</li>
+</ol>
+<p>One-line summary: model selection&rsquo;s influence concentrates in two places. On <strong>SQL correctness</strong>, Qwen lags systematically behind V3/flash; on <strong>abstention policy</strong>, it is decided by the model&rsquo;s own decoding and post-training. A system&rsquo;s running cost, meanwhile, is tied to the provider tier.</p>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+
+      </div>
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+
+      
+
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          Copyright © 2026 Xifanz42. All rights reserved.
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          aria-label="Search"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+    
+    
+      
+      
+      
+        
+      
+      
+        <div id="background-canvas" aria-hidden="true" class="pointer-events-none fixed inset-0 -z-20">
+          <img
+            src="/img/site-background.svg"
+            role="presentation"
+            loading="eager"
+            decoding="async"
+            class="nozoom h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-neutral/75 dark:bg-neutral-800/60"></div>
+        </div>
+      
+    
+  </body>
+  
+</html>

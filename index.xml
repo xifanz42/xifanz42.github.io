@@ -9,7 +9,17 @@
     <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
     <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
     <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Does Text Data Engineering Matter Most? A Single-Turn Capability Evaluation of an NL2SQL Agent</title>
+      <link>https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/</link>
+      <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/</guid>
+      <description>An NL2SQL Agent translates natural-language questions into SQL, and its core design is to ask a clarifying question first when information is missing, mimicking real human interaction, rather than forcing an answer. Over the past year, as the harness idea spread and models kept getting stronger, I began to wonder whether the NL2SQL Agent I built actually has an ask-first advantage. That question is what produced this evaluation. The conclusion, up front: retrieval is the only order-of-magnitude gain. And because retrieval is essentially data processing over text, the Agent&amp;rsquo;s value in single-turn conversation comes almost entirely from text data engineering.</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/featured.png" />
+    </item>
     
     <item>
       <title>NL2SQL Agent: Ask Before You Query</title>
@@ -47,16 +57,6 @@
       <pubDate>Wed, 26 Aug 2026 10:00:00 +0800</pubDate>
       <author>xifan.zou@outlook.com (Xifan)</author>
       <guid>https://xifanz42.github.io/about/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Articles</title>
-      <link>https://xifanz42.github.io/articles/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>xifan.zou@outlook.com (Xifan)</author>
-      <guid>https://xifanz42.github.io/articles/</guid>
       <description></description>
       
     </item>

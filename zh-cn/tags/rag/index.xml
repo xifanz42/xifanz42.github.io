@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RAG on FAN</title>
+    <link>https://xifanz42.github.io/zh-cn/tags/rag/</link>
+    <description>Recent content in RAG on FAN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <managingEditor>xifan.zou@outlook.com (Xifan)</managingEditor>
+    <webMaster>xifan.zou@outlook.com (Xifan)</webMaster>
+    <copyright>Copyright © 2026 Xifanz42. All rights reserved.</copyright>
+    <lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://xifanz42.github.io/zh-cn/tags/rag/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>文本数据工程最为重要？单轮会话下NL2SQL Agent的能力评测</title>
+      <link>https://xifanz42.github.io/zh-cn/articles/nl2sql-agent-eval-measurement-validity/</link>
+      <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+      <author>xifan.zou@outlook.com (Xifan)</author>
+      <guid>https://xifanz42.github.io/zh-cn/articles/nl2sql-agent-eval-measurement-validity/</guid>
+      <description>NL2SQL Agent是一个把自然语言问题翻译成SQL查询的对话Agent，核心设计是“在信息不足时先追问，模拟真实的人类互动”，而不是硬给一个答案。在过去的一年中，harness这个概念愈发盛行、模型能力越来越强，这也催生了我的一个疑问：我当时做的NL2SQL Agent是否真的存在&lt;strong&gt;追问优势&lt;/strong&gt;？因而诞生了针对NL2SQL Agent的评测设计与evaluation。从结论来说，检索是唯一的数量级增益。而检索的本质是对文本的数据处理，也就是说，在单轮会话的场景中，Agent的价值几乎都来自文本数据工程。</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/featured.png" />
+    </item>
+    
+  </channel>
+</rss>

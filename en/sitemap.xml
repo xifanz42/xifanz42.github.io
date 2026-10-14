@@ -3,6 +3,54 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
+    <loc>https://xifanz42.github.io/articles/</loc>
+    <lastmod>2026-10-14T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="https://xifanz42.github.io/zh-cn/articles/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://xifanz42.github.io/articles/"
+    />
+  </url>
+  <url>
+    <loc>https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/</loc>
+    <lastmod>2026-10-14T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="https://xifanz42.github.io/zh-cn/articles/nl2sql-agent-eval-measurement-validity/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://xifanz42.github.io/articles/nl2sql-agent-eval-measurement-validity/"
+    />
+  </url>
+  <url>
+    <loc>https://xifanz42.github.io/</loc>
+    <lastmod>2026-10-14T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link
+      rel="alternate"
+      hreflang="zh-CN"
+      href="https://xifanz42.github.io/zh-cn/"
+    />
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://xifanz42.github.io/"
+    />
+  </url>
+  <url>
     <loc>https://xifanz42.github.io/portfolio/nl2sql-dify-case-study/</loc>
     <lastmod>2026-09-11T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
@@ -32,22 +80,6 @@
       rel="alternate"
       hreflang="en"
       href="https://xifanz42.github.io/portfolio/"
-    />
-  </url>
-  <url>
-    <loc>https://xifanz42.github.io/</loc>
-    <lastmod>2026-09-11T00:00:00+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-      rel="alternate"
-      hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/"
-    />
-    <xhtml:link
-      rel="alternate"
-      hreflang="en"
-      href="https://xifanz42.github.io/"
     />
   </url>
   <url>
@@ -96,21 +128,6 @@
       rel="alternate"
       hreflang="en"
       href="https://xifanz42.github.io/about/"
-    />
-  </url>
-  <url>
-    <loc>https://xifanz42.github.io/articles/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link
-      rel="alternate"
-      hreflang="zh-CN"
-      href="https://xifanz42.github.io/zh-cn/articles/"
-    />
-    <xhtml:link
-      rel="alternate"
-      hreflang="en"
-      href="https://xifanz42.github.io/articles/"
     />
   </url>
 </urlset>
