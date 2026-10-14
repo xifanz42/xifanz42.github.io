@@ -18,12 +18,17 @@
   pageRef = "portfolio"
   weight = 10
 
-# 暂时隐藏：等页面有真实内容后再恢复（占位页面保留）
-# [[main]]
-#   pre = "newspaper-clipping"
-#   name = "文章"
-#   weight = 20
-#   pageRef = "articles"
+[[main]]
+  pre = "newspaper-clipping"
+  name = "文章"
+  weight = 20
+  pageRef = "articles"
+
+# 子导航：指向最新发表的文章（换文章就改这里）
+[[subnavigation]]
+  name = "文本数据工程最为重要？单轮 NL2SQL Agent 评测"
+  pageRef = "articles/nl2sql-agent-eval-measurement-validity"
+  weight = 10
 
 # [[main]]
 #   name = "关于"

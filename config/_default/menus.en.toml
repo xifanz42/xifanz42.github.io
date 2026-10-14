@@ -23,12 +23,17 @@
  pageRef = "portfolio"
  weight = 10
 
-# Hidden until these pages have real content (pages kept as placeholders)
-# [[main]]
-#   pre = "newspaper-clipping"
-#   name = "Articles"
-#   weight = 20
-#   pageRef = "articles"
+[[main]]
+  pre = "newspaper-clipping"
+  name = "Articles"
+  weight = 20
+  pageRef = "articles"
+
+# Sub-navigation: points at the latest article (swap here to feature another one)
+[[subnavigation]]
+  name = "Does text data engineering matter most?"
+  pageRef = "articles/nl2sql-agent-eval-measurement-validity"
+  weight = 10
 
 # [[main]]
 #   name = "About"
